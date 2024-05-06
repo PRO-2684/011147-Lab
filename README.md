@@ -11,5 +11,6 @@ Lab2 of course 011147.02 at USTC. (数据库系统及应用, An Introduction to 
 
 ## Usage
 
-- Start development server: `./scripts/start-dev.sh`
-
+- Start development server: `./scripts/dev.sh`
+- Start production server: `./scripts/prod.sh`
+- Will start MySQL service when script is executed, and stop it after Flask server is closed.
