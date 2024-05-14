@@ -6,8 +6,10 @@ with open("config.json", "r") as f:
     config = load(f)
 
 def init_db(session: Session):
-    session.sql(f"CREATE DATABASE `{config['database']}`").execute()
-    print(f"Database `{config['database']}` created")
+    with open("backend/create-db.sql", "r") as f:
+        sql = f.read().format(database=config['database'])
+    session.sql(sql).execute()
+    print(f"Database `{config['database']}` initialized")
 
 def init_session(port: int = 33060) -> Session:
     try:
