@@ -1,6 +1,62 @@
-body {
-    background-color: #15141A;
+html {
+    color-scheme: dark;
 }
-h1 {
-    color: cyan;
+
+body {
+    color: #FBFBFE;
+    background-color: #15141A;
+
+    h1 {
+        text-align: center;
+    }
+
+    #login-form-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        #login-form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #1E1D26;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+            >label {
+                width: 100%;
+
+                >input {
+                    width: auto;
+                }
+            }
+
+            input {
+                width: 100%;
+                padding: 10px;
+                margin: 5px;
+                border: none;
+                border-radius: 5px;
+            }
+
+            button {
+                width: 100%;
+                padding: 10px;
+                margin: 5px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+        }
+
+        #login-detail {
+            color: gray;
+            font-size: small;
+        } 
+    }
 }

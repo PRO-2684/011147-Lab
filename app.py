@@ -1,5 +1,5 @@
 from flask import Flask, send_from_directory, redirect, abort, request
-from utils import initConnection, checkAdmin, queryStudent
+from utils import initConnection, queryAdmin, queryStudent
 from os import getcwd
 from argparse import ArgumentParser
 
@@ -9,7 +9,7 @@ if not session:
     print("Cannot establish connection to the database.")
     exit(1)
 CWD = getcwd()
-WEB_ALLOWED_PATHS = ["index.html", "static", "favicon.ico"]
+WEB_ALLOWED_PATHS = ["index.html", "admin.html", "student.html", "static", "favicon.ico"]
 
 @app.route("/")  # Redirect to `index.html`
 def index():
@@ -26,12 +26,11 @@ def login():
     isAdmin = bool(data.get("is_admin", False))
     print(f'{"Admin" if isAdmin else "Student"} login attempt: "{username}" "{password}"')
     if isAdmin:
-        data = {}
-        success = checkAdmin(session, username, password)
+        data = queryAdmin(session, username, password)
     else:
         data = queryStudent(session, username, password)
-        success = bool(data)
-    return {"success": success, "data": data}
+    success = bool(data)
+    return {"success": success, "is_admin": isAdmin, "data": data}
 
 
 @app.route("/<path:filename>")  # Serve files from the current directory

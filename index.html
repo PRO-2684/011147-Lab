@@ -12,13 +12,18 @@
 
 <body>
     <h1>Student Management System</h1>
-    <div class="login-form-wrapper">
+    <div id="login-form-container">
         <form action="./api/login" method="POST" id="login-form">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
-            <input type="checkbox" name="is_admin">
+            <label>
+                <input type="checkbox" name="is_admin">
+                I'm an admin
+            </label>
             <button type="submit">Login</button>
         </form>
+        <span id="login-tip"></span>
+        <span id="login-detail"></span>
     </div>
 </body>
 
