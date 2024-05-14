@@ -38,7 +38,7 @@ Lab2 of course 011147.02 at USTC. (数据库系统及应用, An Introduction to 
 
 ### Database
 
-```meimaid
+```mermaid
 erDiagram
     MAJOR ||..|{ CLASS : offers
     CLASS ||..|{ STUDENT : enrolls
@@ -73,8 +73,6 @@ erDiagram
 
 ## Acknowledgements
 
-- This project's backend is written in [Python](https://www.python.org/) language.
-- This project's backend uses [Flask](https://flask.palletsprojects.com/) as the web framework.
-- https://pymysql.readthedocs.io/en/latest/user/examples.html
 - This project's database is managed by [MySQL](https://www.mysql.com/).
+- This project's backend is written in [Python](https://www.python.org/) language, using [Flask](https://flask.palletsprojects.com/) as the web framework and [PyMySQL](https://pymysql.readthedocs.io/en/latest/user/examples.html) to interact with MySQL.
 - The favicon is from [SVG Repo](https://www.svgrepo.com/svg/482504/student-cap).
