@@ -36,14 +36,14 @@ def checkAdmin(conn: "Connection[Cursor]", username: str, password: str) -> bool
         )
         return bool(cur.fetchone())
 
-def checkStudent(conn: "Connection[Cursor]", username: str, password: str) -> bool:
+def queryStudent(conn: "Connection[Cursor]", username: str, password: str) -> tuple:
     """Check if student with given username and password exists."""
     with conn.cursor() as cur:
         cur.execute(
             "SELECT * FROM student WHERE stu_id = %s AND stu_password = %s",
             (username, password)
         )
-        return bool(cur.fetchone())
+        return cur.fetchone()
 
 if __name__ == "__main__":
     conn = initConnection(config.get("port", 3306))
