@@ -1,5 +1,5 @@
 from flask import Flask, send_from_directory, redirect, abort, request
-from utils import initConnection, checkAdmin
+from utils import initConnection, checkAdmin, checkStudent
 from os import getcwd
 from argparse import ArgumentParser
 
@@ -27,10 +27,9 @@ def login():
     print(f'{"Admin" if isAdmin else "Student"} login attempt: "{username}" "{password}"')
     if isAdmin:
         valid = checkAdmin(session, username, password)
-        return {"username": username, "isAdmin": isAdmin, "valid": valid}
     else:
-        pass
-    return {"username": username, "isAdmin": isAdmin, "valid": True}
+        valid = checkStudent(session, username, password)
+    return {"username": username, "isAdmin": isAdmin, "valid": valid}
 
 
 @app.route("/<path:filename>")  # Serve files from the current directory

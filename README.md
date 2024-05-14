@@ -21,12 +21,18 @@ Lab2 of course 011147.02 at USTC. (数据库系统及应用, An Introduction to 
 - Start production server: `./scripts/prod.sh` (Will auto start MySQL service)
 - Stop MySQL service: `./scripts/stop-mysql.sh`
 
-### Admin Account
+### Admin Account(s)
 
 - An admin account is created the first time the server is started. The default username is `admin` and the default password is `admin`.
 - Admins can manage students, courses, and grades.
 - Admins can change their own username and password.
 - You can only add/delete admin accounts in the MySQL console.
+
+### Dummy Data
+
+- `major`: `(1, 'Computer Science', 'John Doe')`
+- `class`: `(1, 'CS101', 'Jane Doe')`
+- `student`: `('PB21114514', 'p@ssw0rd', 'Alice', 0, '12345678901', 'alice@example.com', 1)`
 
 ## Architecture
 

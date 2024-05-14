@@ -21,6 +21,8 @@ CREATE TABLE `major` (
   `dean` varchar(255) NOT NULL,
   PRIMARY KEY (`major_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- Example major
+INSERT INTO `major` (`major_id`, `major_name`, `dean`) VALUES (1, 'Computer Science', 'John Doe');
 
 -- The `class` table
 DROP TABLE IF EXISTS `class`;
@@ -32,6 +34,8 @@ CREATE TABLE `class` (
   PRIMARY KEY (`class_id`),
   CONSTRAINT `class_ibfk_1` FOREIGN KEY (`major_id`) REFERENCES `major` (`major_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- Example class
+INSERT INTO `class` (`class_id`, `class_name`, `advisor`, `major_id`) VALUES (1, 'CS101', 'Jane Doe', 1);
 
 -- The `student` table
 DROP TABLE IF EXISTS `student`;
@@ -46,6 +50,8 @@ CREATE TABLE `student` (
   PRIMARY KEY (`stu_id`),
   CONSTRAINT `student_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- Example student
+INSERT INTO `student` (`stu_id`, `stu_password`, `stu_name`, `sex`, `tel`, `email`, `class_id`) VALUES ('PB21114514', 'p@ssw0rd', 'Alice', 0, '12345678901', 'alice@example.com', 1);
 
 -- The `course` table
 DROP TABLE IF EXISTS `course`;
