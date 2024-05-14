@@ -1,37 +1,42 @@
-from mysqlx import get_session, Session
-from mysqlx.errors import InterfaceError
+from pymysql import connect, Connection
+from pymysql.cursors import Cursor
 from json import load
 
 with open("config.json", "r") as f:
     config = load(f)
 
-def init_db(session: Session):
-    with open("backend/create-db.sql", "r") as f:
-        sql = f.read().format(database=config['database'])
-    session.sql(sql).execute()
-    print(f"Database `{config['database']}` initialized")
-
-def init_session(port: int = 33060) -> Session:
+def initConnection(port: int = 3306) -> "Connection[Cursor]":
+    """Initialize a session with the database. If the database does not exist, create it."""
     try:
-        session = get_session({
-            'host': 'localhost',
-            'port': port,
-            'user': config['user'],
-            'password': config['password']
-        })
-    except InterfaceError as e:
-        print("Error: Could not connect to the database due to", e)
-        return
+        conn = connect(
+            host='localhost',
+            port=port,
+            user=config['user'],
+            password=config['password']
+        )
+    except Exception as e:
+        print(f"Failed to connect to the database: {e}")
+        return None
     # Check if the database exists
-    result = session.sql(f"SHOW DATABASES LIKE '{config['database']}'").execute()
-    if not result.fetch_one():
-        init_db(session)
-    else:
-        print(f"Database `{config['database']}` already exists")
-    session.sql(f"USE `{config['database']}`").execute()
-    return session
+    with conn.cursor() as cur:
+        cur.execute(f"SHOW DATABASES LIKE '{config['database']}'")
+        if not cur.fetchone():
+            print(f"Database `{config['database']}` does not exist!")
+            exit(1)
+    with conn.cursor() as cur:
+        cur.execute(f"USE `{config['database']}`;")
+    return conn
+
+def checkAdmin(conn: "Connection[Cursor]", username: str, password: str) -> bool:
+    """Check if admin with given username and password exists."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT * FROM admin WHERE username = %s AND password = %s",
+            (username, password)
+        )
+        return bool(cur.fetchone())
 
 if __name__ == "__main__":
-    session = init_session()
-    if session:
-        session.close()
+    conn = initConnection(config.get("port", 3306))
+    if conn:
+        conn.close()

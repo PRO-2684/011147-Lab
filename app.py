@@ -1,8 +1,13 @@
 from flask import Flask, send_from_directory, redirect, abort, request
+from utils import initConnection, checkAdmin
 from os import getcwd
 from argparse import ArgumentParser
 
 app = Flask(__name__)
+session = initConnection()
+if not session:
+    print("Cannot establish connection to the database.")
+    exit(1)
 CWD = getcwd()
 WEB_ALLOWED_PATHS = ["index.html", "static", "favicon.ico"]
 
@@ -11,9 +16,21 @@ def index():
     return redirect("/index.html")
 
 
-@app.route("/api")  # API endpoint
-def api():
-    return "API endpoint"
+@app.route("/api/login", methods=["POST"])
+def login():
+    data = request.json
+    if not data:
+        return abort(400)
+    username = data.get("username")
+    password = data.get("password")
+    isAdmin = bool(data.get("is_admin", False))
+    print(f'{"Admin" if isAdmin else "Student"} login attempt: "{username}" "{password}"')
+    if isAdmin:
+        valid = checkAdmin(session, username, password)
+        return {"username": username, "isAdmin": isAdmin, "valid": valid}
+    else:
+        pass
+    return {"username": username, "isAdmin": isAdmin, "valid": True}
 
 
 @app.route("/<path:filename>")  # Serve files from the current directory

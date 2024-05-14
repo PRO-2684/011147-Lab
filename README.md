@@ -8,16 +8,18 @@ Lab2 of course 011147.02 at USTC. (数据库系统及应用, An Introduction to 
 2. Install [MySQL 8.0+](https://dev.mysql.com/doc/refman/8.0/en/installing.html)
 3. Install required packages via `pip install -r requirements.txt`
 4. Allow script execution via `chmod +x ./scripts/*`
-5. Modify `config.json` to fit your MySQL username and password
+5. Modify `config.json` to fit your MySQL username and password (If you intend to change database name, you need to modify `backend/create-db.sql` as well)
+6. Run `./scripts/init-db.sh` to initialize the database
 
 ## Usage
 
 ### Scripts
 
-- Connect to MySQL console: `./scripts/console.sh` (need `jq` installed)
-- Start development server: `./scripts/dev.sh`
-- Start production server: `./scripts/prod.sh`
-- Will start MySQL service when script is executed, and stop it after Flask server is closed.
+- Initialize database: `./scripts/init-db.sh` (Will auto start MySQL service)
+- Connect to MySQL console: `./scripts/console.sh` (Will auto start MySQL service, need `jq` installed)
+- Start development server: `./scripts/dev.sh` (Will auto start MySQL service)
+- Start production server: `./scripts/prod.sh` (Will auto start MySQL service)
+- Stop MySQL service: `./scripts/stop-mysql.sh`
 
 ### Admin Account
 
@@ -67,5 +69,6 @@ erDiagram
 
 - This project's backend is written in [Python](https://www.python.org/) language.
 - This project's backend uses [Flask](https://flask.palletsprojects.com/) as the web framework.
+- https://pymysql.readthedocs.io/en/latest/user/examples.html
 - This project's database is managed by [MySQL](https://www.mysql.com/).
 - The favicon is from [SVG Repo](https://www.svgrepo.com/svg/482504/student-cap).

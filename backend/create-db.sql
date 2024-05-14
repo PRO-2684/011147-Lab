@@ -1,7 +1,9 @@
 -- Create the database used to store our tables
-CREATE DATABASE `{database}`;
+CREATE DATABASE IF NOT EXISTS `student_management`;
+USE `student_management`;
 
 -- The `admin` table
+DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
   `admin_id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
@@ -9,10 +11,10 @@ CREATE TABLE `admin` (
   PRIMARY KEY (`admin_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 -- Default admin account
-INSERT INTO `admin` (`admin_id`, `username`, `password`) VALUES
-(1, 'admin', 'admin'); 
+INSERT INTO `admin` (`admin_id`, `username`, `password`) VALUES (1, 'admin', 'admin'); 
 
 -- The `major` table
+DROP TABLE IF EXISTS `major`;
 CREATE TABLE `major` (
   `major_id` int(11) NOT NULL,
   `major_name` varchar(255) NOT NULL,
@@ -21,6 +23,7 @@ CREATE TABLE `major` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- The `class` table
+DROP TABLE IF EXISTS `class`;
 CREATE TABLE `class` (
   `class_id` int(11) NOT NULL,
   `class_name` varchar(255) NOT NULL,
@@ -31,6 +34,7 @@ CREATE TABLE `class` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- The `student` table
+DROP TABLE IF EXISTS `student`;
 CREATE TABLE `student` (
   `stu_id` varchar(10) NOT NULL,
   `stu_password` varchar(255) NOT NULL,
@@ -44,6 +48,7 @@ CREATE TABLE `student` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- The `course` table
+DROP TABLE IF EXISTS `course`;
 CREATE TABLE `course` (
   `course_id` int(11) NOT NULL,
   `course_name` varchar(255) NOT NULL,
@@ -55,7 +60,8 @@ CREATE TABLE `course` (
   PRIMARY KEY (`course_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- The `score` table ({stu_id, course_id} -> score)
+-- The `score` table ((stu_id, course_id) -> score)
+DROP TABLE IF EXISTS `score`;
 CREATE TABLE `score` (
   `stu_id` varchar(10) NOT NULL,
   `course_id` int(11) NOT NULL,

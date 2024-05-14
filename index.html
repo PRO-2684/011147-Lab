@@ -7,11 +7,19 @@
     <link rel="stylesheet" href="./static/styles/index.css">
     <script src="./static/scripts/index.js"></script>
     <link rel="icon" type="image/svg+xml" href="./static/images/favicon.svg" sizes="any">
-    <title>Student Login</title>
+    <title>Student Management System</title>
 </head>
 
 <body>
-    <h1>Hello, World!</h1>
+    <h1>Student Management System</h1>
+    <div class="login-form-wrapper">
+        <form action="./api/login" method="POST" id="login-form">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="checkbox" name="is_admin">
+            <button type="submit">Login</button>
+        </form>
+    </div>
 </body>
 
 </html>
