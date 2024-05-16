@@ -33,6 +33,13 @@ def login():
     return {"success": success, "isAdmin": isAdmin, "data": data, "token": loginUser(username, password, isAdmin) if success else ""}
 
 
+@app.route("/api/logout", methods=["POST"])
+def logout():
+    token = request.json.get("token")
+    print(f'Logout attempt: "{token}"')
+    return {"success": logoutUser(token)}
+
+
 @app.route("/<path:filename>")  # Serve files from the current directory
 def serve_file(filename: str):
     first_part = filename.split("/", 1)[0]
