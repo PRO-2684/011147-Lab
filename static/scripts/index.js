@@ -32,10 +32,19 @@ async function onLogin(e) {
     const respData = await r.json();
     log("<<<", respData);
     if (respData.success) {
-        const role = respData.is_admin ? "admin" : "student";
-        const username = respData.is_admin ? respData.data[1] : respData.data[2];
+        const role = respData.isAdmin ? "admin" : "student";
+        const username = respData.isAdmin ? respData.data[1] : respData.data[0];
+        const password = respData.isAdmin ? respData.data[2] : respData.data[1];
+        const token = respData.token;
+        const loginInfo = {
+            isAdmin: respData.isAdmin,
+            username: username,
+            password: password,
+            token: token,
+        };
+        localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
         tip.style.color = "green";
-        tip.textContent = `Logged in successfully as ${role} ${username}! Redirecting...`;
+        tip.textContent = `Logged in successfully as ${role} "${username}"! Redirecting...`;
         detail.innerHTML = "";
         const link = detail.appendChild(document.createElement("a"));
         link.href = `/${role}.html`;
@@ -52,5 +61,17 @@ async function onLogin(e) {
 
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = $("#login-form");
+    const tip = $("#login-tip");
+    const detail = $("#login-detail");
     loginForm.addEventListener("submit", onLogin);
+    const loginInfo = localStorage.getItem("loginInfo");
+    if (loginInfo) {
+        const {isAdmin, username, password, token} = JSON.parse(loginInfo);
+        tip.style.color = "green";
+        tip.textContent = `You're already logged in as ${isAdmin ? "admin" : "student"} "${username}".`;
+        const role = isAdmin ? "admin" : "student";
+        const link = detail.appendChild(document.createElement("a"));
+        link.href = `/${role}.html`;
+        link.textContent = "Click here to continue.";
+    }
 });

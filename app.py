@@ -1,13 +1,13 @@
 from flask import Flask, send_from_directory, redirect, abort, request
-from utils import initConnection, queryAdmin, queryStudent
+from utils import initConnection, queryAdmin, queryStudent, loginUser, logoutUser, loggedInQuery
 from os import getcwd
 from argparse import ArgumentParser
 
-app = Flask(__name__)
 session = initConnection()
 if not session:
     print("Cannot establish connection to the database.")
     exit(1)
+app = Flask(__name__)
 CWD = getcwd()
 WEB_ALLOWED_PATHS = ["index.html", "admin.html", "student.html", "static", "favicon.ico"]
 
@@ -30,7 +30,7 @@ def login():
     else:
         data = queryStudent(session, username, password)
     success = bool(data)
-    return {"success": success, "is_admin": isAdmin, "data": data}
+    return {"success": success, "isAdmin": isAdmin, "data": data, "token": loginUser(username, password, isAdmin) if success else ""}
 
 
 @app.route("/<path:filename>")  # Serve files from the current directory
