@@ -5,8 +5,18 @@ html {
 body {
     color: #FBFBFE;
     background-color: #15141A;
+}
 
-    h1 {
-        text-align: center;
+h1 {
+    text-align: center;
+}
+
+#panels {
+    div {
+        display: none;
+
+        &[data-active] {
+            display: initial;
+        }
     }
 }
