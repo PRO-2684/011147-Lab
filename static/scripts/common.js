@@ -16,6 +16,13 @@
         },
     });
 
+    function assertLoggedIn() {
+        if (!window.loginInfo || !window.loginInfo.token) {
+            log("Not logged in!");
+            window.location.href = "/index.html";
+        }
+    }
+
     async function logout() {
         const r = await fetch("/api/logout", {
             method: "POST",
@@ -37,8 +44,8 @@
 
     Object.defineProperty(window, "common", {
         value: {
+            assertLoggedIn,
             logout
         },
     });
 })();
-
