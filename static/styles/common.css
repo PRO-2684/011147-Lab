@@ -1,0 +1,12 @@
+html {
+    color-scheme: dark;
+}
+
+body {
+    color: #FBFBFE;
+    background-color: #15141A;
+
+    h1 {
+        text-align: center;
+    }
+}
