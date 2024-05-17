@@ -24,7 +24,7 @@ h1 {
     background-color: var(--panel-bg);
     backdrop-filter: blur(10px);
 
-    a {
+    >a {
         padding: 1em;
 
         &:hover, &[data-active] {
@@ -35,7 +35,10 @@ h1 {
 }
 
 #panels {
-    div {
+    display: flex;
+    justify-content: center;
+
+    >div {
         display: none;
 
         &[data-active] {
