@@ -12,6 +12,9 @@
             for (const panel of panels) {
                 panel.toggleAttribute('data-active', panel.id === panelId);
             }
+            for (const anchor of nav.children) {
+                anchor.toggleAttribute('data-active', anchor.getAttribute('data-panel') === panelId);
+            }
         }
 
         // Generate anchors
@@ -19,7 +22,8 @@
             const anchor = document.createElement('a');
             anchor.href = '#' + panel.id;
             anchor.setAttribute('data-panel', panel.id);
-            anchor.textContent = panel.id;
+            // Capitalize the first letter
+            anchor.textContent = panel.id.charAt(0).toUpperCase() + panel.id.slice(1);
             nav.appendChild(anchor);
         }
 

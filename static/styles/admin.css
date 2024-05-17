@@ -11,6 +11,29 @@ h1 {
     text-align: center;
 }
 
+#nav {
+    /* Layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    /* Position */
+    position: sticky;
+    top: 0;
+    /* Color */
+    background-color: var(--panel-bg);
+    backdrop-filter: blur(10px);
+
+    a {
+        padding: 1em;
+
+        &:hover, &[data-active] {
+            color: var(--link);
+            background-color: var(--quote-bg);
+        }
+    }
+}
+
 #panels {
     div {
         display: none;
