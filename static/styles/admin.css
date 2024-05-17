@@ -17,6 +17,7 @@ h1 {
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+    margin-bottom: 1em;
     /* Position */
     position: sticky;
     top: 0;

@@ -2,6 +2,7 @@
     const $ = document.querySelector.bind(document);
     const $$ = document.querySelectorAll.bind(document);
     const log = console.log.bind(console, "[admin.js]");
+    const { DataTable, makeEditable } = window.simpleDatatables;
 
     window.common.assertLoggedIn();
     window.addEventListener('DOMContentLoaded', (event) => {
@@ -17,19 +18,38 @@
             }
         }
 
-        // Generate anchors
         for (const panel of panels) {
+            // Generate anchors
             const anchor = document.createElement('a');
             anchor.href = '#' + panel.id;
             anchor.setAttribute('data-panel', panel.id);
-            // Capitalize the first letter
             anchor.textContent = panel.id.charAt(0).toUpperCase() + panel.id.slice(1);
             nav.appendChild(anchor);
+            // Tables
+            const table = panel.querySelector('table');
+            const dataTable = new DataTable(table);
+            const editor = makeEditable(dataTable, {
+                contextMenu: true,
+                hiddenColumns: true,
+                excludeColumns: [0],
+                inline: true,
+                menuItems: [
+                    {
+                        text: "<span class='mdi mdi-delete'></span> Remove",
+                        action: (editor, _event) => {
+                            if (confirm("Are you sure?")) {
+                                const tr = editor.event.target.closest("tr");
+                                editor.removeRow(tr);
+                            }
+                        }
+                    }
+                ]
+            });
         }
 
         // Handle popstate event
         window.addEventListener('popstate', (event) => {
-            const panelId = location.hash.substring(1); // remove the leading '#'
+            const panelId = location.hash.substring(1) || panels[0].id; // remove the leading '#'
             showPanel(panelId);
         });
 

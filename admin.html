@@ -5,8 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./static/styles/common.css">
+    <link rel="stylesheet" href="./static/styles/simple-datatables.css">
+    <link rel="stylesheet" href="./static/styles/simple-datatables-editing.css">
     <link rel="stylesheet" href="./static/styles/admin.css">
     <script src="./static/scripts/common.js"></script> <!-- This is a common script for both admin and student -->
+    <script src="./static/scripts/simple-datatables.js"></script>
     <script src="./static/scripts/admin.js"></script>
     <link rel="icon" type="image/svg+xml" href="./static/images/favicon.svg" sizes="any">
     <title>Student Management System - Admin</title>
@@ -16,11 +19,112 @@
     <h1>Student Management System - Admin</h1>
     <div id="nav"></div>
     <div id="panels">
-        <div id="major" data-active>MAJOR</div>
-        <div id="class">CLASS</div>
-        <div id="student">STUDENT</div>
-        <div id="course">COURSE</div>
-        <div id="score">SCORE</div>
+        <div id="major" data-active>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Major ID</th>
+                        <th>Major name</th>
+                        <th>Dean</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="class">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Class ID</th>
+                        <th>Class name</th>
+                        <th>Advisor</th>
+                        <th>Major ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="student">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stu ID</th>
+                        <th>Stu name</th>
+                        <th>Sex</th>
+                        <th>Tel</th>
+                        <th>Email</th>
+                        <th>Class ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="course">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course ID</th>
+                        <th>Course name</th>
+                        <th>Course Desc</th>
+                        <th>Semester</th>
+                        <th>Teacher</th>
+                        <th>Credit</th>
+                        <th>Hours</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="score">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stu ID</th>
+                        <th>Course ID</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                        <td>NaN</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 

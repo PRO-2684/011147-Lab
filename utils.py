@@ -3,6 +3,13 @@ from pymysql.cursors import Cursor
 from json import load
 from secrets import token_urlsafe
 
+TABLES = {
+    "major": ["major_id", "major_name", "dean"],
+    "class": ["class_id", "class_name", "advisor", "major_id"],
+    "student": ["stu_id", "stu_password", "stu_name", "sex", "tel", "email", "class_id"],
+    "course": ["course_id", "course_name", "course_desc", "semester", "teacher", "credit", "hours"],
+    "score": ["stu_id", "course_id", "score"]
+}
 # token -> user
 loggedInUsers: dict[str, dict] = {}
 
@@ -48,6 +55,19 @@ def queryStudent(conn: "Connection[Cursor]", username: str, password: str) -> tu
             (username, password)
         )
         return cur.fetchone()
+
+def queryTableAdmin(table: str, conn: "Connection[Cursor]", row: str, value: str) -> tuple[tuple]:
+    """Query a table with a keyword. (Need to be admin)"""
+    if table not in TABLES:
+        return tuple()
+    if row not in TABLES[table]:
+        return tuple()
+    with conn.cursor() as cur:
+        cur.execute(
+            f"SELECT * FROM {table} WHERE {row} = %s",
+            (value,)
+        )
+        return cur.fetchall()
 
 def loginUser(username: str, password: str, isAdmin: bool) -> str:
     # Check if the user has already logged in
