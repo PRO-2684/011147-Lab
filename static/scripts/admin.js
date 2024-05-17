@@ -3,6 +3,28 @@
     const $$ = document.querySelectorAll.bind(document);
     const log = console.log.bind(console, "[admin.js]");
     const { DataTable, makeEditable } = window.simpleDatatables;
+    const tableInfo = {
+        "major": {
+            "pkLength": 1,
+            "dataTypes": [Number, String, String]
+        },
+        "class": {
+            "pkLength": 1,
+            "dataTypes": [Number, String, String, Number]
+        },
+        "student": {
+            "pkLength": 1,
+            "dataTypes": [String, String, String, Number, String, String, Number]
+        },
+        "course": {
+            "pkLength": 1,
+            "dataTypes": [Number, String, String, String, String, Number, Number]
+        },
+        "score": {
+            "pkLength": 2,
+            "dataTypes": [String, Number, Number]
+        },
+    };
 
     const assertion = window.common.assertLoggedIn();
     window.addEventListener('DOMContentLoaded', async (event) => {
@@ -24,6 +46,7 @@
         async function reloadTable(panel) {
             dataTables[panel.id]?.editor?.destroy();
             dataTables[panel.id]?.dataTable?.destroy();
+            const pkLength = tableInfo[panel.id].pkLength;
             const table = panel.querySelector('table');
             const headings = [];
             for (const headingEl of table.querySelectorAll('thead>tr>th')) {
@@ -41,7 +64,7 @@
             const editor = makeEditable(dataTable, {
                 contextMenu: true,
                 hiddenColumns: true,
-                excludeColumns: [0],
+                excludeColumns: Array.from({ length: pkLength }, (_, i) => i),
                 inline: true,
                 menuItems: [
                     {
@@ -56,6 +79,34 @@
                 ]
             });
             dataTables[panel.id] = { dataTable, editor };
+            dataTable.on("editable.save.cell", async (after, before, rowIdx, colIdx) => {
+                if (after !== before) {
+                    const row = dataTable.data.data[rowIdx].cells;
+                    const pkValues = [];
+                    for (let i = 0; i < pkLength; i++) {
+                        const cell = row[i];
+                        const dataType = tableInfo[panel.id].dataTypes[i];
+                        const cellValue = dataType(cell.data[0].data);
+                        pkValues.push(cellValue);
+                    }
+                    const newValueDataType = tableInfo[panel.id].dataTypes[colIdx];
+                    const newValue = newValueDataType(after);
+                    log(`Cell (${rowIdx}, ${colIdx}) changed from "${before}" to "${after}"`, pkValues, colIdx, newValue);
+                    const r = await window.common.postWithToken(`/api/table/update`, {
+                        table: panel.id,
+                        pkValues,
+                        colIdx,
+                        newValue,
+                    });
+                    if (!r.success) {
+                        log(`Failed to update cell (${rowIdx}, ${colIdx})!`);
+                        dataTable.data.data[rowIdx].cells[colIdx].data[0].data = before;
+                        dataTable.refresh();
+                    } else {
+                        log(`Cell (${rowIdx}, ${colIdx}) updated!`);
+                    }
+                }
+            });
             log(`Table "${panel.id}" (re)loaded!`);
         }
 

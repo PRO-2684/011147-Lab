@@ -56,13 +56,26 @@ def queryStudent(conn: "Connection[Cursor]", username: str, password: str) -> tu
         )
         return cur.fetchone()
 
-def fetchTable(table: str, conn: "Connection[Cursor]") -> tuple[tuple]:
+def fetchTable(conn: "Connection[Cursor]", table: str) -> tuple[tuple]:
     """Fetch the given table."""
     if table not in TABLES:
         return tuple()
     with conn.cursor() as cur:
         cur.execute(f"SELECT * FROM {table}")
         return cur.fetchall()
+
+def updateTable(conn: "Connection[Cursor]", table: str, pkValues: list[str], colIdx: int, newValue) -> bool:
+    """Update the given table with the given values."""
+    if table not in TABLES:
+        return False
+    with conn.cursor() as cur:
+        whereClause = " AND ".join([f"{TABLES[table][i]} = %s" for i in range(len(pkValues))])
+        r = cur.execute(
+            f"UPDATE {table} SET {TABLES[table][colIdx]} = %s WHERE {whereClause}",
+            (newValue, *pkValues)
+        )
+        conn.commit()
+        return bool(r)
 
 def loginUser(username: str, password: str, isAdmin: bool) -> str:
     """Log in the user and return a token."""

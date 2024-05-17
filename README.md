@@ -71,6 +71,20 @@ erDiagram
     }
 ```
 
+## Roadmap
+
+### Admin
+
+- [ ] Create
+- [x] Retrieve
+- [x] Update
+- [ ] Delete
+
+### Student
+
+- [ ] Retrieve
+- [ ] Update
+
 ## Acknowledgements
 
 - This project's database is managed by [MySQL](https://www.mysql.com/).
