@@ -5,9 +5,11 @@
     const { DataTable, makeEditable } = window.simpleDatatables;
 
     window.common.assertLoggedIn();
-    window.addEventListener('DOMContentLoaded', (event) => {
+    window.addEventListener('DOMContentLoaded', async (event) => {
         const panels = $("#panels").children;
         const nav = $('#nav');
+        const dataTables = {};
+        window.dataTables = dataTables;
 
         function showPanel(panelId) {
             for (const panel of panels) {
@@ -18,16 +20,23 @@
             }
         }
 
-        for (const panel of panels) {
-            // Generate anchors
-            const anchor = document.createElement('a');
-            anchor.href = '#' + panel.id;
-            anchor.setAttribute('data-panel', panel.id);
-            anchor.textContent = panel.id.charAt(0).toUpperCase() + panel.id.slice(1);
-            nav.appendChild(anchor);
-            // Tables
+        async function reloadTable(panel) {
+            dataTables[panel.id]?.editor?.destroy();
+            dataTables[panel.id]?.dataTable?.destroy();
             const table = panel.querySelector('table');
-            const dataTable = new DataTable(table);
+            const headings = [];
+            for (const headingEl of table.querySelectorAll('thead>tr>th')) {
+                headings.push(headingEl.textContent);
+            }
+            const data = await window.common.postWithToken(`/api/table/get`, {
+                table: panel.id,
+            });
+            const dataTable = new DataTable(table, {
+                data: {
+                    headings: headings,
+                    data: data.data,
+                }
+            });
             const editor = makeEditable(dataTable, {
                 contextMenu: true,
                 hiddenColumns: true,
@@ -45,16 +54,46 @@
                     }
                 ]
             });
+            dataTables[panel.id] = { dataTable, editor };
+            log(`Table "${panel.id}" (re)loaded!`);
+        }
+
+        // Generate anchors
+        for (const panel of panels) {
+            const anchor = document.createElement('a');
+            anchor.href = '#' + panel.id;
+            anchor.setAttribute('data-panel', panel.id);
+            anchor.textContent = panel.id.charAt(0).toUpperCase() + panel.id.slice(1);
+            nav.appendChild(anchor);
         }
 
         // Handle popstate event
         window.addEventListener('popstate', (event) => {
             const panelId = location.hash.substring(1) || panels[0].id; // remove the leading '#'
+            if (panelId === "top") return;
             showPanel(panelId);
         });
 
         // Show the initial panel based on the current URL hash
         const initialPanelId = location.hash.substring(1) || panels[0].id;
         showPanel(initialPanelId);
+
+        // Load the tables
+        for (const panel of panels) {
+            await reloadTable(panel);
+        }
+
+        // Refresh button
+        async function onRefresh(e) {
+            const btn = e.target;
+            const isDisabled = btn.hasAttribute('data-busy');
+            if (isDisabled) return;
+            const panelId = nav.querySelector('[data-active]').getAttribute('data-panel');
+            btn.toggleAttribute('data-busy', true);
+            await reloadTable($("#" + panelId));
+            btn.toggleAttribute('data-busy', false);
+        }
+        const btn = $("#op-refresh");
+        btn.addEventListener('click', onRefresh);
     });
 })();

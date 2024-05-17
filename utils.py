@@ -56,20 +56,16 @@ def queryStudent(conn: "Connection[Cursor]", username: str, password: str) -> tu
         )
         return cur.fetchone()
 
-def queryTableAdmin(table: str, conn: "Connection[Cursor]", row: str, value: str) -> tuple[tuple]:
-    """Query a table with a keyword. (Need to be admin)"""
+def fetchTable(table: str, conn: "Connection[Cursor]") -> tuple[tuple]:
+    """Fetch the given table."""
     if table not in TABLES:
         return tuple()
-    if row not in TABLES[table]:
-        return tuple()
     with conn.cursor() as cur:
-        cur.execute(
-            f"SELECT * FROM {table} WHERE {row} = %s",
-            (value,)
-        )
+        cur.execute(f"SELECT * FROM {table}")
         return cur.fetchall()
 
 def loginUser(username: str, password: str, isAdmin: bool) -> str:
+    """Log in the user and return a token."""
     # Check if the user has already logged in
     for token, data in loggedInUsers.items():
         if data["username"] == username and data["password"] == password and data["isAdmin"] == isAdmin:
@@ -80,6 +76,7 @@ def loginUser(username: str, password: str, isAdmin: bool) -> str:
     return token
 
 def logoutUser(token: str) -> bool:
+    """Log out the user with the given token."""
     if token in loggedInUsers:
         del loggedInUsers[token]
         return True
@@ -87,6 +84,7 @@ def logoutUser(token: str) -> bool:
         return False
 
 def loggedInQuery(token) -> dict[str, str | bool] | None:
+    """Query the logged in user with the given token."""
     return loggedInUsers.get(token, None)
 
 if __name__ == "__main__":

@@ -23,28 +23,37 @@
         }
     }
 
-    async function logout() {
-        const r = await fetch("/api/logout", {
+    async function postWithToken(url, data={}) {
+        const token = window.loginInfo?.token;
+        if (!token) {
+            log("Not logged in!");
+            throw new Error("Not logged in!");
+        }
+        data.token = token;
+        const r = await fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ token: window.loginInfo.token }),
+            body: JSON.stringify(data),
         });
-        const respData = await r.json();
-        const success = respData.success;
-        if (success) {
+        return await r.json();
+    }
+
+    async function logout() {
+        const respData = await postWithToken("/api/logout");
+        if (respData.success) {
             window.loginInfo = null;
             log("Logout success!");
         } else {
             log("Logout failed!");
         }
-        return success;
     }
 
     Object.defineProperty(window, "common", {
         value: {
             assertLoggedIn,
+            postWithToken,
             logout
         },
     });

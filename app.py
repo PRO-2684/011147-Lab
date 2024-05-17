@@ -1,5 +1,5 @@
 from flask import Flask, send_from_directory, redirect, abort, request
-from utils import initConnection, queryAdmin, queryStudent, loginUser, logoutUser, loggedInQuery
+from utils import initConnection, queryAdmin, queryStudent, fetchTable, loginUser, logoutUser, loggedInQuery
 from os import getcwd
 from argparse import ArgumentParser
 
@@ -38,6 +38,18 @@ def logout():
     token = request.json.get("token")
     print(f'Logout attempt: "{token}"')
     return {"success": logoutUser(token)}
+
+
+@app.route("/api/table/get", methods=["POST"])
+def tableGet():
+    token = request.json.get("token")
+    user = loggedInQuery(token)
+    isAdmin = user.get("isAdmin") if user else False
+    if not isAdmin:
+        return abort(403)
+    table = request.json.get("table")
+    result = fetchTable(table, session)
+    return {"success": bool(result), "data": result}
 
 
 @app.route("/<path:filename>")  # Serve files from the current directory
