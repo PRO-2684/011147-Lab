@@ -178,12 +178,12 @@
 
 
 .datatable-sorter::before {
-	border-top: 4px solid #000;
+	border-top: 4px solid #fff;
 	bottom: 0px;
 }
 
 .datatable-sorter::after {
-	border-bottom: 4px solid #000;
+	border-bottom: 4px solid #fff;
 	border-top: 4px solid transparent;
 	top: 0px;
 }
