@@ -1,11 +1,12 @@
-(function () {
+(async function () {
     const $ = document.querySelector.bind(document);
     const $$ = document.querySelectorAll.bind(document);
     const log = console.log.bind(console, "[admin.js]");
     const { DataTable, makeEditable } = window.simpleDatatables;
 
-    window.common.assertLoggedIn();
+    const assertion = window.common.assertLoggedIn();
     window.addEventListener('DOMContentLoaded', async (event) => {
+        await assertion;
         const panels = $("#panels").children;
         const nav = $('#nav');
         const dataTables = {};

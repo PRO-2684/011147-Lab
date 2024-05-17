@@ -16,6 +16,14 @@ def index():
     return redirect("/index.html")
 
 
+@app.route("/api/whoami", methods=["POST"])
+def whoAmI():
+    token = request.json.get("token")
+    result = loggedInQuery(token)
+    print(f'WhoAmI "{token}": {result}')
+    return {"success": bool(result), "data": result}
+
+
 @app.route("/api/login", methods=["POST"])
 def login():
     data = request.json
@@ -53,7 +61,7 @@ def tableGet():
 
 
 @app.route("/<path:filename>")  # Serve files from the current directory
-def serve_file(filename: str):
+def serveFile(filename: str):
     first_part = filename.split("/", 1)[0]
     if first_part not in WEB_ALLOWED_PATHS:
         return abort(404)

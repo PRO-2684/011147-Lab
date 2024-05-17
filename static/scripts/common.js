@@ -16,9 +16,13 @@
         },
     });
 
-    function assertLoggedIn() {
+    async function assertLoggedIn() {
         if (!window.loginInfo || !window.loginInfo.token) {
             log("Not logged in!");
+            window.location.href = "/index.html";
+        }
+        const loggedIn = await refreshLoginStatus();
+        if (!loggedIn) {
             window.location.href = "/index.html";
         }
     }
@@ -40,6 +44,18 @@
         return await r.json();
     }
 
+    async function refreshLoginStatus() {
+        const r = await postWithToken("/api/whoami");
+        const { success, data } = r;
+        if (success) {
+            log("Logged in as:", data);
+            Object.assign(window.loginInfo, data);
+        } else {
+            log("Token expired!");
+        }
+        return success;
+    }
+
     async function logout() {
         const respData = await postWithToken("/api/logout");
         if (respData.success) {
@@ -54,6 +70,7 @@
         value: {
             assertLoggedIn,
             postWithToken,
+            refreshLoginStatus,
             logout
         },
     });
