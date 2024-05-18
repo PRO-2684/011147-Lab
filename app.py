@@ -1,5 +1,18 @@
 from flask import Flask, send_from_directory, redirect, abort, request
-from utils import log, initConnection, queryAdmin, queryStudent, fetchTable, updateTable, insertTable, loginUser, logoutUser, loggedInQuery
+from utils import (
+    log,
+    initConnection,
+    queryAdmin,
+    queryStudent,
+    fetchTable,
+    updateTable,
+    insertTable,
+    deleteTable,
+    loginUser,
+    logoutUser,
+    loggedInQuery,
+)
+from functools import wraps
 from os import getcwd
 from argparse import ArgumentParser
 
@@ -9,11 +22,21 @@ if not session:
     exit(1)
 app = Flask(__name__)
 CWD = getcwd()
-WEB_ALLOWED_PATHS = ["index.html", "admin.html", "student.html", "static", "favicon.ico"]
+WEB_ALLOWED_PATHS = [
+    "index.html",
+    "admin.html",
+    "student.html",
+    "static",
+    "favicon.ico",
+]
+
 
 @app.route("/")  # Redirect to `index.html`
 def index():
     return redirect("/index.html")
+
+
+# Login & logout
 
 
 @app.route("/api/whoami", methods=["POST"])
@@ -32,7 +55,9 @@ def login():
     username = data.get("username")
     password = data.get("password")
     isAdmin = bool(data.get("is_admin", False))
-    print(f'{"Admin" if isAdmin else "Student"} login attempt: "{username}" "{password}"')
+    print(
+        f'{"Admin" if isAdmin else "Student"} login attempt: "{username}" "{password}"'
+    )
     if isAdmin:
         data = queryAdmin(session, username, password)
     else:
@@ -51,13 +76,27 @@ def logout():
     return {"success": logoutUser(token)}
 
 
+# Helper functions
+
+
+def adminOnly(func):
+    @wraps(func) # Preserve the original function's metadata
+    def wrapper():
+        token = request.json.get("token")
+        user = loggedInQuery(token)
+        isAdmin = user.get("isAdmin") if user else False
+        if not isAdmin:
+            return abort(403)
+        return func(token)
+    return wrapper
+
+
+# Admin operations
+
+
 @app.route("/api/table/get", methods=["POST"])
-def tableGet():
-    token = request.json.get("token")
-    user = loggedInQuery(token)
-    isAdmin = user.get("isAdmin") if user else False
-    if not isAdmin:
-        return abort(403)
+@adminOnly
+def tableGet(token):
     table = request.json.get("table")
     log(token, "TableGet", table)
     result = fetchTable(session, table)
@@ -65,12 +104,8 @@ def tableGet():
 
 
 @app.route("/api/table/update", methods=["POST"])
-def tableUpdate():
-    token = request.json.get("token")
-    user = loggedInQuery(token)
-    isAdmin = user.get("isAdmin") if user else False
-    if not isAdmin:
-        return abort(403)
+@adminOnly
+def tableUpdate(token):
     table = request.json.get("table")
     pkValues = request.json.get("pkValues")
     colIdx = request.json.get("colIdx")
@@ -82,12 +117,8 @@ def tableUpdate():
 
 
 @app.route("/api/table/insert", methods=["POST"])
-def tableInsert():
-    token = request.json.get("token")
-    user = loggedInQuery(token)
-    isAdmin = user.get("isAdmin") if user else False
-    if not isAdmin:
-        return abort(403)
+@adminOnly
+def tableInsert(token):
     log(token, "TableInsert", request.json)
     success, error = insertTable(session, **request.json)
     if success:
@@ -95,6 +126,24 @@ def tableInsert():
     else:
         log(token, "TableInsert failed", error)
     return {"success": success, "error": error}
+
+
+@app.route("/api/table/delete", methods=["POST"])
+@adminOnly
+def tableDelete(token):
+    table = request.json.get("table")
+    pkValues = request.json.get("pkValues")
+    success, error = deleteTable(session, table, pkValues)
+    if success:
+        log(token, "TableDelete", table, pkValues)
+    return {"success": success, "error": error}
+
+# Student operations
+
+...
+
+# Serve files
+
 
 @app.route("/<path:filename>")  # Serve files from the current directory
 def serveFile(filename: str):

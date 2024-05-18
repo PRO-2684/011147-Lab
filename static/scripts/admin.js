@@ -73,6 +73,7 @@
                     {
                         text: "Duplicate", // Duplicate row (copy content to "Insert" form)
                         action: (editor, _event) => {
+                            editor.closeMenu();
                             const tr = editor.event.target.closest("tr");
                             const cells = tr.querySelectorAll("td");
                             const form = panel.querySelector("form");
@@ -83,15 +84,40 @@
                             }
                             inputs[0].focus();
                             inputs[0].scrollIntoView();
-                            editor.closeMenu();
                         }
                     },
                     {
                         text: "Remove", // Remove row
-                        action: (editor, _event) => {
+                        action: async (editor, _event) => {
+                            editor.closeMenu();
                             if (confirm("Are you sure?")) {
                                 const tr = editor.event.target.closest("tr");
-                                editor.removeRow(tr);
+                                const pkValues = [];
+                                for (let i = 0; i < pkLength; i++) {
+                                    const cell = tr.children[i];
+                                    const isEditing = Boolean(cell.querySelector("input"));
+                                    if (isEditing) {
+                                        alert("Cannot remove a row that is being edited!");
+                                        return;
+                                    }
+                                    const dataType = tableInfo[panel.id].dataTypes[i];
+                                    const cellValue = dataType(cell.textContent);
+                                    pkValues.push(cellValue);
+                                }
+                                log(`Removing row with pkValues:`, pkValues);
+                                panel.toggleAttribute('data-busy', true);
+                                const r = await window.common.postWithToken(`/api/table/delete`, {
+                                    table: panel.id,
+                                    pkValues,
+                                });
+                                panel.toggleAttribute('data-busy', false);
+                                if (!r.success) {
+                                    log("Failed to remove row:", r.error);
+                                    alert("Failed to remove row: " + r.error);
+                                } else {
+                                    log("Row removed!");
+                                    editor.removeRow(tr);
+                                }
                             }
                         }
                     }
@@ -111,12 +137,14 @@
                     const newValueDataType = tableInfo[panel.id].dataTypes[colIdx];
                     const newValue = newValueDataType(after);
                     log(`Cell (${rowIdx}, ${colIdx}) changed from "${before}" to "${after}"`, pkValues, colIdx, newValue);
+                    panel.toggleAttribute('data-busy', true);
                     const r = await window.common.postWithToken(`/api/table/update`, {
                         table: panel.id,
                         pkValues,
                         colIdx,
                         newValue,
                     });
+                    panel.toggleAttribute('data-busy', false);
                     if (!r.success) {
                         log(`Failed to update cell (${rowIdx}, ${colIdx})!`);
                         dataTable.data.data[rowIdx].cells[colIdx].data[0].data = before;
@@ -129,9 +157,9 @@
             // Insert form
             async function onInsert(e) {
                 e.preventDefault();
-                this.toggleAttribute('data-busy', true);
+                panel.toggleAttribute('data-busy', true);
                 const respData = await window.common.submit(e, true);
-                this.toggleAttribute('data-busy', false);
+                panel.toggleAttribute('data-busy', false);
                 if (respData.success) {
                     log(`Inserted a new row into table "${panel.id}"!`);
                     reloadTable(panel);

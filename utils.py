@@ -65,6 +65,8 @@ def queryStudent(conn: "Connection[Cursor]", username: str, password: str) -> tu
         )
         return cur.fetchone()
 
+# Admin operations
+
 def fetchTable(conn: "Connection[Cursor]", table: str) -> tuple[tuple]:
     """Fetch the given table."""
     if table not in TABLES:
@@ -100,7 +102,29 @@ def insertTable(conn: "Connection[Cursor]", table: str, **kwargs) -> tuple[bool,
         except Exception as e:
             return False, str(e)
         conn.commit()
-        return bool(r), ""
+        return bool(r), "" if r else "Failed to insert"
+
+def deleteTable(conn: "Connection[Cursor]", table: str, pkValues: list[str]) -> tuple[bool, str]:
+    """Delete the given row specified by the primary key values."""
+    if table not in TABLES:
+        return False
+    with conn.cursor() as cur:
+        whereClause = " AND ".join([f"{TABLES[table][i]} = %s" for i in range(len(pkValues))])
+        try:
+            r = cur.execute(
+                f"DELETE FROM {table} WHERE {whereClause}",
+                pkValues
+            )
+        except Exception as e:
+            return False, str(e)
+        conn.commit()
+        return bool(r), "" if r else "Failed to delete"
+
+# Student operations
+
+...
+
+# Login & Logout
 
 def loginUser(username: str, password: str, isAdmin: bool) -> str:
     """Log in the user and return a token."""
@@ -126,6 +150,7 @@ def loggedInQuery(token) -> dict[str, str | bool] | None:
     return loggedInUsers.get(token, None)
 
 if __name__ == "__main__":
+    # Test the connection
     conn = initConnection(config.get("port", 3306))
     if conn:
         conn.close()
