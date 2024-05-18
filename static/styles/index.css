@@ -40,6 +40,16 @@ body {
                 border: none;
                 border-radius: 5px;
                 cursor: pointer;
+                background-color: #2a76e9;
+                transition: background-color 0.2s ease-in-out;
+
+                &:hover {
+                    background-color: #2a76e9d8;
+                }
+
+                &:active {
+                    background-color: #2a76e9a1;
+                }
             }
         }
 

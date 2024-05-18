@@ -52,7 +52,7 @@
                 table: panel.id,
             });
             dataTable.data.data = [];
-            dataTable.insert({data: data.data});
+            dataTable.insert({ data: data.data });
             dataTable.wrapperDOM.toggleAttribute('data-busy', false);
             log(`Reloaded table "${panel.id}".`);
         }
@@ -211,11 +211,15 @@
         }
         const refreshBtn = $("#op-refresh");
         const logoutBtn = $("#op-logout");
+        const topBtn = $("#op-top");
         refreshBtn.addEventListener('click', onRefresh);
         logoutBtn.addEventListener('click', async () => {
             await window.common.logout();
             alert("You've logged out and will be redirected soon.");
             window.location.href = "/index.html";
+        });
+        topBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0 });
         });
     });
 })();
