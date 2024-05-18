@@ -80,3 +80,8 @@ h1 {
         }
     }
 }
+
+.datatable-wrapper[data-busy] {
+    opacity: 0.6;
+    cursor: progress;
+}

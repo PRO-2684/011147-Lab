@@ -44,23 +44,26 @@
         }
 
         async function reloadTable(panel) {
-            dataTables[panel.id]?.editor?.destroy();
-            dataTables[panel.id]?.dataTable?.destroy();
-            const pkLength = tableInfo[panel.id].pkLength;
-            const table = panel.querySelector('table');
-            const headings = [];
-            for (const headingEl of table.querySelectorAll('thead>tr>th')) {
-                headings.push(headingEl.textContent);
-            }
+            initTable(panel);
+            const dataTable = dataTables[panel.id].dataTable;
+            dataTable.setMessage("Loading...");
+            dataTable.wrapperDOM.toggleAttribute('data-busy', true);
             const data = await window.common.postWithToken(`/api/table/get`, {
                 table: panel.id,
             });
-            const dataTable = new DataTable(table, {
-                data: {
-                    headings: headings,
-                    data: data.data,
-                }
-            });
+            dataTable.data.data = [];
+            dataTable.insert({data: data.data});
+            dataTable.wrapperDOM.toggleAttribute('data-busy', false);
+            log(`Reloaded table "${panel.id}".`);
+        }
+
+        function initTable(panel) {
+            if (dataTables[panel.id]) {
+                return;
+            }
+            const pkLength = tableInfo[panel.id].pkLength;
+            const table = panel.querySelector('table');
+            const dataTable = new DataTable(table);
             const editor = makeEditable(dataTable, {
                 contextMenu: true,
                 hiddenColumns: true,
@@ -107,7 +110,7 @@
                     }
                 }
             });
-            log(`Table "${panel.id}" (re)loaded!`);
+            log(`Table "${panel.id}" initialized!`);
         }
 
         // Generate anchors

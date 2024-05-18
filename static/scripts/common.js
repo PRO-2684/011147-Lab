@@ -45,6 +45,9 @@
     }
 
     async function refreshLoginStatus() {
+        if (!window.loginInfo?.token) {
+            return false;
+        }
         const r = await postWithToken("/api/whoami");
         const { success, data } = r;
         if (success) {
@@ -52,6 +55,7 @@
             Object.assign(window.loginInfo, data);
         } else {
             log("Token expired!");
+            window.loginInfo = { ...window.loginInfo, token: null };
         }
         return success;
     }

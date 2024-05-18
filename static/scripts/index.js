@@ -59,7 +59,8 @@
         }
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
+        await window.common.refreshLoginStatus();
         const loginForm = $("#login-form");
         const tip = $("#login-tip");
         const detail = $("#login-detail");
@@ -70,9 +71,11 @@
             $("#login-form input[name='username']").value = username;
             $("#login-form input[name='password']").value = password;
             $("#login-form input[name='is_admin'][type='checkbox']").checked = isAdmin;
-            // Tip the user that they're already logged in
-            tip.style.color = "green";
-            tip.textContent = `You're already logged in as ${isAdmin ? "admin" : "student"} "${username}".`;
+            if (token) {
+                // Tip the user that they're already logged in
+                tip.style.color = "green";
+                tip.textContent = `You're already logged in as ${isAdmin ? "admin" : "student"} "${username}".`;
+            }
             const role = isAdmin ? "admin" : "student";
             const link = detail.appendChild(document.createElement("a"));
             link.href = `/${role}.html`;
