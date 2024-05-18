@@ -16,6 +16,36 @@
         },
     });
 
+    async function submit(e, withToken=false) {
+        // Transform form data to JSON and send it to the server
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const postData = {};
+        formData.forEach((value, key) => {
+            postData[key] = value;
+        });
+        e.target.querySelectorAll("input[type='number']").forEach((el) => {
+            // Convert number strings to numbers
+            postData[el.name] = Number(postData[el.name]);
+        });
+        const url = e.target.getAttribute("action") ?? location.href;
+        const method = e.target.getAttribute("method");
+        if (withToken) {
+            postData.token = window.loginInfo?.token;
+        }
+        log(">>>", postData);
+        const r = await fetch(url, {
+            method: method,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(postData),
+        });
+        const respData = await r.json();
+        log("<<<", respData);
+        return respData;
+    }
+
     async function assertLoggedIn() {
         if (!window.loginInfo || !window.loginInfo.token) {
             log("Not logged in!");
@@ -72,6 +102,7 @@
 
     Object.defineProperty(window, "common", {
         value: {
+            submit,
             assertLoggedIn,
             postWithToken,
             refreshLoginStatus,

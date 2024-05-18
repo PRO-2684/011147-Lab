@@ -9,29 +9,12 @@
     }
 
     async function onLogin(e) {
-        e.preventDefault();
         const tip = $("#login-tip");
         const detail = $("#login-detail");
-        const formData = new FormData(this);
-        const postData = {};
-        formData.forEach((value, key) => {
-            postData[key] = value;
-        });
-        const url = this.getAttribute("action");
-        const method = this.getAttribute("method");
-        log(">>>", postData);
         tip.style.color = "gray";
         tip.textContent = "Logging in...";
         detail.textContent = formatTime();
-        const r = await fetch(url, {
-            method: method,
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(postData),
-        });
-        const respData = await r.json();
-        log("<<<", respData);
+        const respData = await window.common.submit(e);
         if (respData.success) {
             const role = respData.isAdmin ? "admin" : "student";
             const username = respData.isAdmin ? respData.data[1] : respData.data[0];

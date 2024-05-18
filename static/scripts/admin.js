@@ -69,17 +69,15 @@
                 hiddenColumns: true,
                 excludeColumns: Array.from({ length: pkLength }, (_, i) => i),
                 inline: true,
-                menuItems: [
-                    {
-                        text: "<span class='mdi mdi-delete'></span> Remove",
-                        action: (editor, _event) => {
-                            if (confirm("Are you sure?")) {
-                                const tr = editor.event.target.closest("tr");
-                                editor.removeRow(tr);
-                            }
+                menuItems: [{
+                    text: "Remove",
+                    action: (editor, _event) => {
+                        if (confirm("Are you sure?")) {
+                            const tr = editor.event.target.closest("tr");
+                            editor.removeRow(tr);
                         }
                     }
-                ]
+                }]
             });
             dataTables[panel.id] = { dataTable, editor };
             dataTable.on("editable.save.cell", async (after, before, rowIdx, colIdx) => {
@@ -110,6 +108,22 @@
                     }
                 }
             });
+            // Insert form
+            async function onInsert(e) {
+                e.preventDefault();
+                this.toggleAttribute('data-busy', true);
+                const respData = await window.common.submit(e, true);
+                this.toggleAttribute('data-busy', false);
+                if (respData.success) {
+                    log(`Inserted a new row into table "${panel.id}"!`);
+                    reloadTable(panel);
+                } else {
+                    const error = `Failed to insert a new row into table "${panel.id}": ${respData.error}`;
+                    log(error);
+                    alert(error);
+                }
+            }
+            panel.querySelector('form').addEventListener('submit', onInsert);
             log(`Table "${panel.id}" initialized!`);
         }
 

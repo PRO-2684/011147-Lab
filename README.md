@@ -89,4 +89,5 @@ erDiagram
 
 - This project's database is managed by [MySQL](https://www.mysql.com/).
 - This project's backend is written in [Python](https://www.python.org/) language, using [Flask](https://flask.palletsprojects.com/) as the web framework and [PyMySQL](https://pymysql.readthedocs.io/en/latest/user/examples.html) to interact with MySQL.
+- The frontend uses [simple-datatables](https://github.com/fiduswriter/simple-datatables/) to display and modify data in tables.
 - The favicon is from [SVG Repo](https://www.svgrepo.com/svg/482504/student-cap).

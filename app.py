@@ -1,5 +1,5 @@
 from flask import Flask, send_from_directory, redirect, abort, request
-from utils import log, initConnection, queryAdmin, queryStudent, fetchTable, updateTable, loginUser, logoutUser, loggedInQuery
+from utils import log, initConnection, queryAdmin, queryStudent, fetchTable, updateTable, insertTable, loginUser, logoutUser, loggedInQuery
 from os import getcwd
 from argparse import ArgumentParser
 
@@ -80,6 +80,21 @@ def tableUpdate():
         log(token, "TableUpdate", table, pkValues, colIdx, newValue)
     return {"success": success}
 
+
+@app.route("/api/table/insert", methods=["POST"])
+def tableInsert():
+    token = request.json.get("token")
+    user = loggedInQuery(token)
+    isAdmin = user.get("isAdmin") if user else False
+    if not isAdmin:
+        return abort(403)
+    log(token, "TableInsert", request.json)
+    success, error = insertTable(session, **request.json)
+    if success:
+        log(token, "TableInsert successful")
+    else:
+        log(token, "TableInsert failed", error)
+    return {"success": success, "error": error}
 
 @app.route("/<path:filename>")  # Serve files from the current directory
 def serveFile(filename: str):

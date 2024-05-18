@@ -86,6 +86,22 @@ def updateTable(conn: "Connection[Cursor]", table: str, pkValues: list[str], col
         conn.commit()
         return bool(r)
 
+def insertTable(conn: "Connection[Cursor]", table: str, **kwargs) -> tuple[bool, str]:
+    """Insert the given values into the given table."""
+    if table not in TABLES:
+        return False
+    with conn.cursor() as cur:
+        values = [kwargs.get(col, None) for col in TABLES[table]]
+        try:
+            r = cur.execute(
+                f"INSERT INTO {table} VALUES ({', '.join(['%s' for _ in range(len(values))])})",
+                values
+            )
+        except Exception as e:
+            return False, str(e)
+        conn.commit()
+        return bool(r), ""
+
 def loginUser(username: str, password: str, isAdmin: bool) -> str:
     """Log in the user and return a token."""
     # Check if the user has already logged in
