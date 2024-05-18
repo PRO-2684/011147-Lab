@@ -78,7 +78,7 @@ erDiagram
 - [x] Create
 - [x] Retrieve
 - [x] Update
-- [ ] Delete
+- [x] Delete
 
 ### Student
 

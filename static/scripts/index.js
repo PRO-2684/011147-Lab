@@ -58,11 +58,11 @@
                 // Tip the user that they're already logged in
                 tip.style.color = "green";
                 tip.textContent = `You're already logged in as ${isAdmin ? "admin" : "student"} "${username}".`;
+                const role = isAdmin ? "admin" : "student";
+                const link = detail.appendChild(document.createElement("a"));
+                link.href = `/${role}.html`;
+                link.textContent = "Click here to continue.";
             }
-            const role = isAdmin ? "admin" : "student";
-            const link = detail.appendChild(document.createElement("a"));
-            link.href = `/${role}.html`;
-            link.textContent = "Click here to continue.";
         }
     });
 })();

@@ -112,8 +112,9 @@
                                 });
                                 panel.toggleAttribute('data-busy', false);
                                 if (!r.success) {
-                                    log("Failed to remove row:", r.error);
-                                    alert("Failed to remove row: " + r.error);
+                                    const error = `Failed to remove row on table "${panel.id}": ${r.error}`;
+                                    log(error);
+                                    alert(error);
                                 } else {
                                     log("Row removed!");
                                     editor.removeRow(tr);
@@ -208,7 +209,13 @@
             await reloadTable($("#" + panelId));
             btn.toggleAttribute('data-busy', false);
         }
-        const btn = $("#op-refresh");
-        btn.addEventListener('click', onRefresh);
+        const refreshBtn = $("#op-refresh");
+        const logoutBtn = $("#op-logout");
+        refreshBtn.addEventListener('click', onRefresh);
+        logoutBtn.addEventListener('click', async () => {
+            await window.common.logout();
+            alert("You've logged out and will be redirected soon.");
+            window.location.href = "/index.html";
+        });
     });
 })();

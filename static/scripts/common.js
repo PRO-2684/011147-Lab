@@ -49,11 +49,11 @@
     async function assertLoggedIn() {
         if (!window.loginInfo || !window.loginInfo.token) {
             log("Not logged in!");
-            window.location.href = "/index.html";
+            window.location.replace("/index.html");
         }
         const loggedIn = await refreshLoginStatus();
         if (!loggedIn) {
-            window.location.href = "/index.html";
+            window.location.replace("/index.html");
         }
     }
 
@@ -92,11 +92,13 @@
 
     async function logout() {
         const respData = await postWithToken("/api/logout");
+        window.loginInfo = { ...window.loginInfo, token: null };
         if (respData.success) {
-            window.loginInfo = null;
             log("Logout success!");
+            return true;
         } else {
             log("Logout failed!");
+            return false;
         }
     }
 
