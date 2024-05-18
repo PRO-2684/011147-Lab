@@ -75,7 +75,7 @@ erDiagram
 
 ### Admin
 
-- [ ] Create
+- [x] Create
 - [x] Retrieve
 - [x] Update
 - [ ] Delete

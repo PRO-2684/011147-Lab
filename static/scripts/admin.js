@@ -69,15 +69,33 @@
                 hiddenColumns: true,
                 excludeColumns: Array.from({ length: pkLength }, (_, i) => i),
                 inline: true,
-                menuItems: [{
-                    text: "Remove",
-                    action: (editor, _event) => {
-                        if (confirm("Are you sure?")) {
+                menuItems: [
+                    {
+                        text: "Duplicate", // Duplicate row (copy content to "Insert" form)
+                        action: (editor, _event) => {
                             const tr = editor.event.target.closest("tr");
-                            editor.removeRow(tr);
+                            const cells = tr.querySelectorAll("td");
+                            const form = panel.querySelector("form");
+                            // Select inputs that type is not "hidden"
+                            const inputs = form.querySelectorAll("input:not([type='hidden'])");
+                            for (let i = 0; i < cells.length; i++) {
+                                inputs[i].value = cells[i].textContent;
+                            }
+                            inputs[0].focus();
+                            inputs[0].scrollIntoView();
+                            editor.closeMenu();
+                        }
+                    },
+                    {
+                        text: "Remove", // Remove row
+                        action: (editor, _event) => {
+                            if (confirm("Are you sure?")) {
+                                const tr = editor.event.target.closest("tr");
+                                editor.removeRow(tr);
+                            }
                         }
                     }
-                }]
+                ]
             });
             dataTables[panel.id] = { dataTable, editor };
             dataTable.on("editable.save.cell", async (after, before, rowIdx, colIdx) => {
