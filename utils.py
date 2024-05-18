@@ -16,6 +16,15 @@ loggedInUsers: dict[str, dict] = {}
 with open("config.json", "r") as f:
     config = load(f)
 
+def log(token: str, *args, **kwargs):
+    """Log the given message."""
+    user = loggedInUsers.get(token, None)
+    if user:
+        badge = f"{'Admin' if user['isAdmin'] else 'Student'} {user['username']}"
+    else:
+        badge = token
+    print(f"[{badge}]", *args, **kwargs)
+
 def initConnection(port: int = 3306) -> "Connection[Cursor]":
     """Initialize a session with the database. If the database does not exist, create it."""
     try:

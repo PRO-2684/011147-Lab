@@ -1,5 +1,5 @@
 from flask import Flask, send_from_directory, redirect, abort, request
-from utils import initConnection, queryAdmin, queryStudent, fetchTable, updateTable, loginUser, logoutUser, loggedInQuery
+from utils import log, initConnection, queryAdmin, queryStudent, fetchTable, updateTable, loginUser, logoutUser, loggedInQuery
 from os import getcwd
 from argparse import ArgumentParser
 
@@ -20,7 +20,7 @@ def index():
 def whoAmI():
     token = request.json.get("token")
     result = loggedInQuery(token)
-    print(f'WhoAmI "{token}": {result}')
+    log(token, "WhoAmI:", result)
     return {"success": bool(result), "data": result}
 
 
@@ -38,13 +38,16 @@ def login():
     else:
         data = queryStudent(session, username, password)
     success = bool(data)
-    return {"success": success, "isAdmin": isAdmin, "data": data, "token": loginUser(username, password, isAdmin) if success else ""}
+    token = loginUser(username, password, isAdmin) if success else ""
+    if success:
+        log(token, "Login successful")
+    return {"success": success, "isAdmin": isAdmin, "data": data, "token": token}
 
 
 @app.route("/api/logout", methods=["POST"])
 def logout():
     token = request.json.get("token")
-    print(f'Logout attempt: "{token}"')
+    log(token, "Logout")
     return {"success": logoutUser(token)}
 
 
@@ -56,6 +59,7 @@ def tableGet():
     if not isAdmin:
         return abort(403)
     table = request.json.get("table")
+    log(token, "TableGet", table)
     result = fetchTable(session, table)
     return {"success": bool(result), "data": result}
 
@@ -72,6 +76,8 @@ def tableUpdate():
     colIdx = request.json.get("colIdx")
     newValue = request.json.get("newValue")
     success = updateTable(session, table, pkValues, colIdx, newValue)
+    if success:
+        log(token, "TableUpdate", table, pkValues, colIdx, newValue)
     return {"success": success}
 
 
