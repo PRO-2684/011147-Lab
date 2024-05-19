@@ -26,8 +26,10 @@
             }
         }
 
-        async function reloadInfo(panel) { 
+        async function reloadInfo(panel) {
+            initInfo(panel);
             const ul = panel.querySelector("ul");
+            const form = panel.querySelector("form");
             ul.toggleAttribute("data-busy", true);
             const data = await window.common.postWithToken("/api/student/info");
             if (!data.success) {
@@ -35,11 +37,45 @@
             } else {
                 const spans = ul.querySelectorAll("span");
                 for (let i = 0; i < spans.length; i++) {
-                    spans[i].textContent = data.data[i];
+                    const span = spans[i];
+                    span.textContent = data.data[i];
+                    if (span.hasAttribute("id")) {
+                        const input = form.querySelector(`input[name="${span.id}"]`);
+                        input.value = data.data[i];
+                        span.title = "Double click to edit";
+                        span.addEventListener("dblclick", () => {
+                            input.scrollIntoView();
+                            input.focus();
+                        });
+                    }
                 }
             }
             ul.toggleAttribute("data-busy", false);
             log("Reloaded info panel.");
+        }
+
+        function initInfo(panel) {
+            const form = panel.querySelector("form");
+            if (form.hasAttribute("data-initialized")) {
+                return;
+            }
+            async function onUpdate(e) {
+                e.preventDefault();
+                panel.toggleAttribute("data-busy", true);
+                const respData = await window.common.submit(e, true);
+                if (respData.success) {
+                    log("Info updated!");
+                    await reloadInfo(panel);
+                } else {
+                    const error = "Failed to update info!";
+                    log(error);
+                    alert(error);
+                }
+                panel.toggleAttribute("data-busy", false);
+            }
+            form.addEventListener("submit", onUpdate);
+            form.toggleAttribute("data-initialized", true);
+            log("Info panel initialized!");
         }
 
         async function reloadTable(panel) {

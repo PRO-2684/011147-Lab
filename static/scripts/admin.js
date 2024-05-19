@@ -153,15 +153,15 @@
                 e.preventDefault();
                 panel.toggleAttribute('data-busy', true);
                 const respData = await window.common.submit(e, true);
-                panel.toggleAttribute('data-busy', false);
                 if (respData.success) {
                     log(`Inserted a new row into table "${panel.id}"!`);
-                    reloadTable(panel);
+                    await reloadTable(panel);
                 } else {
                     const error = `Failed to insert a new row into table "${panel.id}": ${respData.error}`;
                     log(error);
                     alert(error);
                 }
+                panel.toggleAttribute('data-busy', false);
             }
             panel.querySelector('form').addEventListener('submit', onInsert);
             log(`Table "${panel.id}" initialized!`);
