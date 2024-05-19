@@ -43,7 +43,7 @@ Lab2 of course 011147.02 at USTC. (数据库系统及应用, An Introduction to 
 ### Debugging
 
 - Debug frontend: append `debug=true` to the URL search parameters
-    - `admin.html?debug=true`: Will expose all dataTables under `window.dataTables`
+    - `admin.html?debug=true` / `student.html?debug=true`: Will expose all dataTables under `window.dataTables`
 
 ## Architecture
 

@@ -135,6 +135,31 @@
         showPanel(initialPanelId);
     }
 
+    function initFloatButtons(reloadFunc) {
+        // Refresh button
+        async function onRefresh(e) {
+            const btn = e.target;
+            const isDisabled = btn.hasAttribute('data-busy');
+            if (isDisabled) return;
+            const panelId = nav.querySelector('[data-active]').getAttribute('data-panel');
+            btn.toggleAttribute('data-busy', true);
+            await reloadFunc($("#" + panelId));
+            btn.toggleAttribute('data-busy', false);
+        }
+        const refreshBtn = $("#op-refresh");
+        const logoutBtn = $("#op-logout");
+        const topBtn = $("#op-top");
+        refreshBtn.addEventListener('click', onRefresh);
+        logoutBtn.addEventListener('click', async () => {
+            await window.common.logout();
+            alert("You've logged out and will be redirected soon.");
+            window.location.href = "/index.html";
+        });
+        topBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0 });
+        });
+    }
+
     Object.defineProperty(window, "common", {
         value: {
             submit,
@@ -143,6 +168,7 @@
             refreshLoginStatus,
             logout,
             initNav,
+            initFloatButtons
         },
     });
 })();

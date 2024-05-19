@@ -163,14 +163,6 @@ def adminDelete(token):
 # Student operations
 
 
-@app.route("/api/student/courses", methods=["POST"])
-@studentOnly
-def studentCourses(token):
-    log(token, "StudentCourses")
-    result = fetchCourses(session)
-    return {"success": bool(result), "data": result}
-
-
 @app.route("/api/student/info", methods=["POST"])
 @studentOnly
 def studentInfo(token):
@@ -189,6 +181,21 @@ def studentUpdate(token):
     log(token, "StudentUpdate", data)
     success = updateStuInfo(session, stuId, **data)
     return {"success": success}
+
+
+@app.route("/api/student/courses", methods=["POST"])
+@studentOnly
+def studentCourses(token):
+    log(token, "StudentCourses")
+    result = fetchCourses(session)
+    return {"success": bool(result), "data": result}
+
+
+@app.route("/api/student/grades", methods=["POST"])
+@studentOnly
+def studentGrades(token):
+    log(token, "StudentGrades")
+    return {"success": True, "data": []} # TODO: Implement this
 
 
 # Serve files

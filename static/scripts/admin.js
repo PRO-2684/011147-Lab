@@ -32,7 +32,8 @@
         const panels = $("#panels").children;
         const nav = $('#nav');
         const dataTables = {};
-        // Expose dataTables to the global scope for debugging
+        window.common.initNav(panels, nav);
+        // Expose dataTables to `window` for debugging
         location.search.includes("debug=true") && (window.dataTables = dataTables);
 
         async function reloadTable(panel) {
@@ -166,34 +167,12 @@
             log(`Table "${panel.id}" initialized!`);
         }
 
-        window.common.initNav(panels, nav);
+        // Float buttons
+        window.common.initFloatButtons(reloadTable);
 
         // Load the tables
         for (const panel of panels) {
             await reloadTable(panel);
         }
-
-        // Refresh button
-        async function onRefresh(e) {
-            const btn = e.target;
-            const isDisabled = btn.hasAttribute('data-busy');
-            if (isDisabled) return;
-            const panelId = nav.querySelector('[data-active]').getAttribute('data-panel');
-            btn.toggleAttribute('data-busy', true);
-            await reloadTable($("#" + panelId));
-            btn.toggleAttribute('data-busy', false);
-        }
-        const refreshBtn = $("#op-refresh");
-        const logoutBtn = $("#op-logout");
-        const topBtn = $("#op-top");
-        refreshBtn.addEventListener('click', onRefresh);
-        logoutBtn.addEventListener('click', async () => {
-            await window.common.logout();
-            alert("You've logged out and will be redirected soon.");
-            window.location.href = "/index.html";
-        });
-        topBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0 });
-        });
     });
 })();
