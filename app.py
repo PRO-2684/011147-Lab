@@ -80,6 +80,7 @@ def logout():
 
 
 def adminOnly(func):
+    """Decorator to restrict access to admin users only."""
     @wraps(func) # Preserve the original function's metadata
     def wrapper():
         token = request.json.get("token")

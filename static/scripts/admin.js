@@ -32,7 +32,8 @@
         const panels = $("#panels").children;
         const nav = $('#nav');
         const dataTables = {};
-        window.dataTables = dataTables;
+        // Expose dataTables to the global scope for debugging
+        location.search.includes("debug=true") && (window.dataTables = dataTables);
 
         function showPanel(panelId) {
             for (const panel of panels) {
