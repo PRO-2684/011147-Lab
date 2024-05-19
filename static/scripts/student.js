@@ -6,5 +6,8 @@
     const assertion = window.common.assertLoggedIn();
     window.addEventListener("DOMContentLoaded", async (event) => {
         if (!(await assertion)) return;
+        const panels = $("#panels").children;
+        const nav = $('#nav');
+        window.common.initNav(panels, nav);
     })
 })();

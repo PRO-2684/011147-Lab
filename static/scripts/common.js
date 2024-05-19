@@ -104,13 +104,45 @@
         }
     }
 
+    function initNav(panels, nav) {
+        function showPanel(panelId) {
+            for (const panel of panels) {
+                panel.toggleAttribute('data-active', panel.id === panelId);
+            }
+            for (const anchor of nav.children) {
+                anchor.toggleAttribute('data-active', anchor.getAttribute('data-panel') === panelId);
+            }
+        }
+
+        // Generate anchors
+        for (const panel of panels) {
+            const anchor = document.createElement('a');
+            anchor.href = '#' + panel.id;
+            anchor.setAttribute('data-panel', panel.id);
+            anchor.textContent = panel.id.charAt(0).toUpperCase() + panel.id.slice(1);
+            nav.appendChild(anchor);
+        }
+
+        // Handle popstate event
+        window.addEventListener('popstate', (event) => {
+            const panelId = location.hash.substring(1) || panels[0].id; // remove the leading '#'
+            if (panelId === "top") return;
+            showPanel(panelId);
+        });
+
+        // Show the initial panel based on the current URL hash
+        const initialPanelId = location.hash.substring(1) || panels[0].id;
+        showPanel(initialPanelId);
+    }
+
     Object.defineProperty(window, "common", {
         value: {
             submit,
             assertLoggedIn,
             postWithToken,
             refreshLoginStatus,
-            logout
+            logout,
+            initNav,
         },
     });
 })();
