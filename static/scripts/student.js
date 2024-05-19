@@ -3,5 +3,8 @@
     const $$ = document.querySelectorAll.bind(document);
     const log = console.log.bind(console, "[student.js]");
     
-    window.common.assertLoggedIn();
+    const assertion = window.common.assertLoggedIn();
+    window.addEventListener("DOMContentLoaded", async (event) => {
+        if (!(await assertion)) return;
+    })
 })();

@@ -50,11 +50,13 @@
         if (!window.loginInfo || !window.loginInfo.token) {
             log("Not logged in!");
             window.location.replace("/index.html");
+            return false;
         }
         const loggedIn = await refreshLoginStatus();
         if (!loggedIn) {
             window.location.replace("/index.html");
         }
+        return loggedIn;
     }
 
     async function postWithToken(url, data={}) {

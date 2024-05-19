@@ -28,7 +28,7 @@
 
     const assertion = window.common.assertLoggedIn();
     window.addEventListener('DOMContentLoaded', async (event) => {
-        await assertion;
+        if (!(await assertion)) return;
         const panels = $("#panels").children;
         const nav = $('#nav');
         const dataTables = {};
