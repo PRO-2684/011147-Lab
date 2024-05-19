@@ -84,7 +84,8 @@ def logout():
 
 def adminOnly(func):
     """Decorator to restrict access to admin users only."""
-    @wraps(func) # Preserve the original function's metadata
+
+    @wraps(func)  # Preserve the original function's metadata
     def wrapper():
         token = request.json.get("token")
         user = loggedInQuery(token)
@@ -92,12 +93,14 @@ def adminOnly(func):
         if not isAdmin:
             return abort(403)
         return func(token)
+
     return wrapper
 
 
 def studentOnly(func):
     """Decorator to restrict access to student users only."""
-    @wraps(func) # Preserve the original function's metadata
+
+    @wraps(func)  # Preserve the original function's metadata
     def wrapper():
         token = request.json.get("token")
         user = loggedInQuery(token)
@@ -105,6 +108,7 @@ def studentOnly(func):
         if isAdmin:
             return abort(403)
         return func(token)
+
     return wrapper
 
 
@@ -155,7 +159,9 @@ def adminDelete(token):
         log(token, "AdminDelete", table, pkValues)
     return {"success": success, "error": error}
 
+
 # Student operations
+
 
 @app.route("/api/student/courses", methods=["POST"])
 @studentOnly
@@ -183,6 +189,7 @@ def studentUpdate(token):
     log(token, "StudentUpdate", data)
     success = updateStuInfo(session, stuId, **data)
     return {"success": success}
+
 
 # Serve files
 
