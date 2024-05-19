@@ -11,6 +11,7 @@ from utils import (
     fetchCourses,
     getStuInfo,
     updateStuInfo,
+    getStuGrades,
     loginUser,
     logoutUser,
     loggedInQuery,
@@ -195,7 +196,10 @@ def studentCourses(token):
 @studentOnly
 def studentGrades(token):
     log(token, "StudentGrades")
-    return {"success": True, "data": []} # TODO: Implement this
+    user = loggedInQuery(token)
+    stuId = user.get("username")
+    result = getStuGrades(session, stuId)
+    return {"success": bool(result), "data": result}
 
 
 # Serve files

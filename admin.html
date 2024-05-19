@@ -24,7 +24,7 @@
                 <thead>
                     <tr>
                         <th>Major ID</th>
-                        <th>Major name</th>
+                        <th>Major Name</th>
                         <th>Dean</th>
                     </tr>
                 </thead>
@@ -40,7 +40,7 @@
             <form action="./api/admin/insert" method="POST">
                 <input type="hidden" name="table" value="major">
                 <input type="number" min="1" name="major_id" placeholder="Major ID" required>
-                <input type="text" name="major_name" placeholder="Major name" required>
+                <input type="text" name="major_name" placeholder="Major Name" required>
                 <input type="text" name="dean" placeholder="Dean" required>
                 <button type="submit">Insert</button>
             </form>
@@ -50,7 +50,7 @@
                 <thead>
                     <tr>
                         <th>Class ID</th>
-                        <th>Class name</th>
+                        <th>Class Name</th>
                         <th>Advisor</th>
                         <th>Major ID</th>
                     </tr>
@@ -68,7 +68,7 @@
             <form action="./api/admin/insert" method="POST">
                 <input type="hidden" name="table" value="class">
                 <input type="number" min="1" name="class_id" placeholder="Class ID" required>
-                <input type="text" name="class_name" placeholder="Class name" required>
+                <input type="text" name="class_name" placeholder="Class Name" required>
                 <input type="text" name="advisor" placeholder="Advisor" required>
                 <input type="number" min="1" name="major_id" placeholder="Major ID" required>
                 <button type="submit">Insert</button>
@@ -80,7 +80,7 @@
                     <tr>
                         <th>Stu ID</th>
                         <th>Password</th>
-                        <th>Stu name</th>
+                        <th>Stu Name</th>
                         <th>Sex</th>
                         <th>Tel</th>
                         <th>Email</th>
@@ -104,7 +104,7 @@
                 <input type="hidden" name="table" value="student">
                 <input type="text" name="stu_id" placeholder="Stu ID" required>
                 <input type="text" name="stu_password" placeholder="Password" required>
-                <input type="text" name="stu_name" placeholder="Stu name" required>
+                <input type="text" name="stu_name" placeholder="Stu Name" required>
                 <input type="number" min="0" max="1" name="sex" placeholder="Sex" required>
                 <input type="text" name="tel" placeholder="Tel" required>
                 <input type="email" name="email" placeholder="Email" required>
@@ -117,7 +117,7 @@
                 <thead>
                     <tr>
                         <th>Course ID</th>
-                        <th>Course name</th>
+                        <th>Course Name</th>
                         <th>Course Desc</th>
                         <th>Semester</th>
                         <th>Teacher</th>
@@ -141,7 +141,7 @@
             <form action="./api/admin/insert" method="POST">
                 <input type="hidden" name="table" value="course">
                 <input type="number" min="1" name="course_id" placeholder="Course ID" required>
-                <input type="text" name="course_name" placeholder="Course name" required>
+                <input type="text" name="course_name" placeholder="Course Name" required>
                 <input type="text" name="course_desc" placeholder="Course Desc" required>
                 <input type="text" name="semester" placeholder="Semester" required>
                 <input type="text" name="teacher" placeholder="Teacher" required>

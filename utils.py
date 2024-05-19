@@ -183,6 +183,16 @@ def updateStuInfo(conn: "Connection[Cursor]", stu_id: str, **kwargs) -> bool:
         return bool(r)
 
 
+def getStuGrades(conn: "Connection[Cursor]", stu_id: str) -> tuple[tuple]:
+    """Get the student's grades."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT course.course_id, course.course_name, score FROM course, score WHERE course.course_id = score.course_id AND score.stu_id = %s",
+            (stu_id,),
+        )
+        return cur.fetchall()
+
+
 # Login & Logout
 
 
