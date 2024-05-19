@@ -99,7 +99,7 @@ def adminOnly(func):
 @adminOnly
 def adminGet(token):
     table = request.json.get("table")
-    log(token, "TableGet", table)
+    log(token, "AdminGet", table)
     result = fetchTable(session, table)
     return {"success": bool(result), "data": result}
 
@@ -113,30 +113,30 @@ def adminUpdate(token):
     newValue = request.json.get("newValue")
     success = updateTable(session, table, pkValues, colIdx, newValue)
     if success:
-        log(token, "TableUpdate", table, pkValues, colIdx, newValue)
+        log(token, "AdminUpdate", table, pkValues, colIdx, newValue)
     return {"success": success}
 
 
 @app.route("/api/admin/insert", methods=["POST"])
 @adminOnly
 def adminInsert(token):
-    log(token, "TableInsert", request.json)
+    log(token, "AdminInsert", request.json)
     success, error = insertTable(session, **request.json)
     if success:
-        log(token, "TableInsert successful")
+        log(token, "AdminInsert successful")
     else:
-        log(token, "TableInsert failed", error)
+        log(token, "AdminInsert failed", error)
     return {"success": success, "error": error}
 
 
-@app.route("/api/table/delete", methods=["POST"])
+@app.route("/api/admin/delete", methods=["POST"])
 @adminOnly
-def tableDelete(token):
+def adminDelete(token):
     table = request.json.get("table")
     pkValues = request.json.get("pkValues")
     success, error = deleteTable(session, table, pkValues)
     if success:
-        log(token, "TableDelete", table, pkValues)
+        log(token, "AdminDelete", table, pkValues)
     return {"success": success, "error": error}
 
 # Student operations
