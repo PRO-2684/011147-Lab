@@ -93,7 +93,7 @@ erDiagram
 
 ### Student
 
-- [ ] Retrieve
+- [x] Retrieve
 - [ ] Update
 
 ## Acknowledgements

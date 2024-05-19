@@ -167,9 +167,10 @@ def adminDelete(token):
 @app.route("/api/student/info", methods=["POST"])
 @studentOnly
 def studentInfo(token):
-    username = request.json.get("username")
-    log(token, "StudentInfo", username)
-    result = getStuInfo(session, username)
+    user = loggedInQuery(token)
+    stuId = user.get("username")
+    log(token, "StudentInfo", stuId)
+    result = getStuInfo(session, stuId)
     return {"success": bool(result), "data": result}
 
 

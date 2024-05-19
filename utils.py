@@ -160,10 +160,17 @@ def fetchCourses(conn: "Connection[Cursor]") -> tuple[tuple]:
     return fetchTable(conn, "course")
 
 
-def getStuInfo(conn: "Connection[Cursor]", stu_id: str) -> tuple:
-    """Get the student's information."""
+studentFields = [f"student.{col}" for col in TABLES["student"][:-1]]
+classFields = [f"class.{col}" for col in TABLES["class"][:-1]]
+majorFields = [f"major.{col}" for col in TABLES["major"]]
+cols = ", ".join(studentFields + classFields + majorFields)
+sql = f"SELECT {cols} FROM student, class, major WHERE student.class_id = class.class_id AND class.major_id = major.major_id AND student.stu_id = %s"
+
+def getStuInfo(conn: "Connection[Cursor]", stu_id: str) -> tuple | None:
+    """Get the student's information, including the class and major."""
     with conn.cursor() as cur:
-        cur.execute("SELECT * FROM student WHERE stu_id = %s", (stu_id,))
+        print(sql, stu_id)
+        cur.execute(sql, (stu_id,))
         return cur.fetchone()
 
 
