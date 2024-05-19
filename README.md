@@ -28,6 +28,12 @@ Lab2 of course 011147.02 at USTC. (数据库系统及应用, An Introduction to 
 - Admins can change their own username and password.
 - You can only add/delete admin accounts in the MySQL console.
 
+### Student Account(s)
+
+- Students can query all courses and their own grades.
+- Students can view their own basic information.
+- Students can change their own password, tel, and email.
+
 ### Dummy Data
 
 - `major`: `(1, 'Computer Science', 'John Doe')`

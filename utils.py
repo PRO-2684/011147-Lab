@@ -10,6 +10,7 @@ TABLES = {
     "course": ["course_id", "course_name", "course_desc", "semester", "teacher", "credit", "hours"],
     "score": ["stu_id", "course_id", "score"]
 }
+STUDENT_CAN_CHANGE = ["stu_password", "tel", "email"]
 # token -> user
 loggedInUsers: dict[str, dict] = {}
 
@@ -122,7 +123,31 @@ def deleteTable(conn: "Connection[Cursor]", table: str, pkValues: list[str]) -> 
 
 # Student operations
 
-...
+def fetchCourses(conn: "Connection[Cursor]") -> tuple[tuple]:
+    """Fetch all courses."""
+    return fetchTable(conn, "course")
+
+def getStuInfo(conn: "Connection[Cursor]", stu_id: str) -> tuple:
+    """Get the student's information."""
+    with conn.cursor() as cur:
+        cur.execute("SELECT * FROM student WHERE stu_id = %s", (stu_id,))
+        return cur.fetchone()
+
+def updateStuInfo(conn: "Connection[Cursor]", stu_id: str, **kwargs) -> bool:
+    """Update the student's information."""
+    with conn.cursor() as cur:
+        keys = []
+        values = []
+        for col in STUDENT_CAN_CHANGE:
+            if col in kwargs:
+                keys.append(f"{col} = %s")
+                values.append(kwargs[col])
+        r = cur.execute(
+            f"UPDATE student SET {', '.join(keys)} WHERE stu_id = %s",
+            (*values, stu_id)
+        )
+        conn.commit()
+        return bool(r)
 
 # Login & Logout
 

@@ -8,6 +8,9 @@ from utils import (
     updateTable,
     insertTable,
     deleteTable,
+    fetchCourses,
+    getStuInfo,
+    updateStuInfo,
     loginUser,
     logoutUser,
     loggedInQuery,
@@ -92,6 +95,19 @@ def adminOnly(func):
     return wrapper
 
 
+def studentOnly(func):
+    """Decorator to restrict access to student users only."""
+    @wraps(func) # Preserve the original function's metadata
+    def wrapper():
+        token = request.json.get("token")
+        user = loggedInQuery(token)
+        isAdmin = user.get("isAdmin") if user else False
+        if isAdmin:
+            return abort(403)
+        return func(token)
+    return wrapper
+
+
 # Admin operations
 
 
@@ -141,7 +157,32 @@ def adminDelete(token):
 
 # Student operations
 
-...
+@app.route("/api/student/courses", methods=["POST"])
+@studentOnly
+def studentCourses(token):
+    log(token, "StudentCourses")
+    result = fetchCourses(session)
+    return {"success": bool(result), "data": result}
+
+
+@app.route("/api/student/info", methods=["POST"])
+@studentOnly
+def studentInfo(token):
+    username = request.json.get("username")
+    log(token, "StudentInfo", username)
+    result = getStuInfo(session, username)
+    return {"success": bool(result), "data": result}
+
+
+@app.route("/api/student/update", methods=["POST"])
+@studentOnly
+def studentUpdate(token):
+    user = loggedInQuery(token)
+    stuId = user.get("username")
+    data = request.json
+    log(token, "StudentUpdate", data)
+    success = updateStuInfo(session, stuId, **data)
+    return {"success": success}
 
 # Serve files
 
