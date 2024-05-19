@@ -169,7 +169,6 @@ sql = f"SELECT {cols} FROM student, class, major WHERE student.class_id = class.
 def getStuInfo(conn: "Connection[Cursor]", stu_id: str) -> tuple | None:
     """Get the student's information, including the class and major."""
     with conn.cursor() as cur:
-        print(sql, stu_id)
         cur.execute(sql, (stu_id,))
         return cur.fetchone()
 
