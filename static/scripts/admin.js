@@ -49,7 +49,7 @@
             const dataTable = dataTables[panel.id].dataTable;
             dataTable.setMessage("Loading...");
             dataTable.wrapperDOM.toggleAttribute('data-busy', true);
-            const data = await window.common.postWithToken(`/api/table/get`, {
+            const data = await window.common.postWithToken(`/api/admin/get`, {
                 table: panel.id,
             });
             dataTable.data.data = [];
@@ -107,7 +107,7 @@
                                 }
                                 log(`Removing row with pkValues:`, pkValues);
                                 panel.toggleAttribute('data-busy', true);
-                                const r = await window.common.postWithToken(`/api/table/delete`, {
+                                const r = await window.common.postWithToken(`/api/admin/delete`, {
                                     table: panel.id,
                                     pkValues,
                                 });
@@ -140,7 +140,7 @@
                     const newValue = newValueDataType(after);
                     log(`Cell (${rowIdx}, ${colIdx}) changed from "${before}" to "${after}"`, pkValues, colIdx, newValue);
                     panel.toggleAttribute('data-busy', true);
-                    const r = await window.common.postWithToken(`/api/table/update`, {
+                    const r = await window.common.postWithToken(`/api/admin/update`, {
                         table: panel.id,
                         pkValues,
                         colIdx,

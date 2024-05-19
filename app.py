@@ -95,18 +95,18 @@ def adminOnly(func):
 # Admin operations
 
 
-@app.route("/api/table/get", methods=["POST"])
+@app.route("/api/admin/get", methods=["POST"])
 @adminOnly
-def tableGet(token):
+def adminGet(token):
     table = request.json.get("table")
     log(token, "TableGet", table)
     result = fetchTable(session, table)
     return {"success": bool(result), "data": result}
 
 
-@app.route("/api/table/update", methods=["POST"])
+@app.route("/api/admin/update", methods=["POST"])
 @adminOnly
-def tableUpdate(token):
+def adminUpdate(token):
     table = request.json.get("table")
     pkValues = request.json.get("pkValues")
     colIdx = request.json.get("colIdx")
@@ -117,9 +117,9 @@ def tableUpdate(token):
     return {"success": success}
 
 
-@app.route("/api/table/insert", methods=["POST"])
+@app.route("/api/admin/insert", methods=["POST"])
 @adminOnly
-def tableInsert(token):
+def adminInsert(token):
     log(token, "TableInsert", request.json)
     success, error = insertTable(session, **request.json)
     if success:
