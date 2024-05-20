@@ -34,6 +34,28 @@
                     max-width: 10em;
                     max-height: 10em;
                 }
+
+                input#profile-upload {
+                    max-width: 11em;
+                    border-style: dashed;
+                    border-radius: 0.5em;
+                    border-color: gray;
+                    color: gray;
+                    padding: 0.5em;
+                    transition-property: border-color, color, background-color;
+                    transition-duration: 0.25s;
+                    transition-timing-function: ease-in-out;
+
+                    &::file-selector-button {
+                        display: none;
+                    }
+                }
+
+                input#profile-upload:hover, input#profile-upload[data-dragover] {
+                    border-color: unset;
+                    color: unset;
+                    background-color: var(--code-bg);
+                }
             }
 
         }

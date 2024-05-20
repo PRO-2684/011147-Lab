@@ -116,6 +116,20 @@
                 }
                 panel.toggleAttribute("data-busy", false);
             });
+            input.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.dataTransfer.dropEffect = "copy";
+                input.toggleAttribute("data-dragover", true);
+            });
+            input.addEventListener("dragleave", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                input.toggleAttribute("data-dragover", false);
+            });
+            input.addEventListener("drop", async (e) => {
+                input.toggleAttribute("data-dragover", false);
+            });
             log("Info panel initialized!");
         }
 
