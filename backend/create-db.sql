@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS `major`;
 CREATE TABLE `major` (
   `major_id` int(11) NOT NULL,
   `major_name` varchar(255) NOT NULL,
+  `major_stu_num` int(11) NOT NULL DEFAULT 0,
   `dean` varchar(255) NOT NULL,
   PRIMARY KEY (`major_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -29,6 +30,7 @@ DROP TABLE IF EXISTS `class`;
 CREATE TABLE `class` (
   `class_id` int(11) NOT NULL,
   `class_name` varchar(255) NOT NULL,
+  `class_stu_num` int(11) NOT NULL DEFAULT 0,
   `advisor` varchar(255) NOT NULL,
   `major_id` int(11) NOT NULL,
   PRIMARY KEY (`class_id`),
@@ -50,6 +52,23 @@ CREATE TABLE `student` (
   PRIMARY KEY (`stu_id`),
   CONSTRAINT `student_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- Trigger to update `major_stu_num` and `class_stu_num` when a student is added or removed
+DELIMITER //
+CREATE TRIGGER `student_after_insert` AFTER INSERT ON `student`
+FOR EACH ROW
+BEGIN
+  UPDATE `class` SET `class_stu_num` = `class_stu_num` + 1 WHERE `class_id` = NEW.class_id;
+  UPDATE `major` SET `major_stu_num` = `major_stu_num` + 1 WHERE `major_id` = (SELECT `major_id` FROM `class` WHERE `class_id` = NEW.class_id);
+END;
+//
+CREATE TRIGGER `student_after_delete` AFTER DELETE ON `student`
+FOR EACH ROW
+BEGIN
+  UPDATE `class` SET `class_stu_num` = `class_stu_num` - 1 WHERE `class_id` = OLD.class_id;
+  UPDATE `major` SET `major_stu_num` = `major_stu_num` - 1 WHERE `major_id` = (SELECT `major_id` FROM `class` WHERE `class_id` = OLD.class_id);
+END;
+//
+DELIMITER ;
 -- Example student
 INSERT INTO `student` (`stu_id`, `stu_password`, `stu_name`, `sex`, `tel`, `email`, `class_id`) VALUES ('PB21114514', 'p@ssw0rd', 'Alice', 0, '12345678901', 'alice@example.com', 1);
 
@@ -77,3 +96,4 @@ CREATE TABLE `score` (
   CONSTRAINT `score_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`),
   CHECK (`score` BETWEEN 0 AND 100)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+

@@ -3,27 +3,12 @@
     const $$ = document.querySelectorAll.bind(document);
     const log = console.log.bind(console, "[admin.js]");
     const { DataTable, makeEditable } = window.simpleDatatables;
-    const tableInfo = {
-        "major": {
-            "pkLength": 1,
-            "dataTypes": [Number, String, String]
-        },
-        "class": {
-            "pkLength": 1,
-            "dataTypes": [Number, String, String, Number]
-        },
-        "student": {
-            "pkLength": 1,
-            "dataTypes": [String, String, String, Number, String, String, Number]
-        },
-        "course": {
-            "pkLength": 1,
-            "dataTypes": [Number, String, String, String, String, Number, Number]
-        },
-        "score": {
-            "pkLength": 2,
-            "dataTypes": [String, Number, Number]
-        },
+    const tableDataTypeInfo = {
+        "major": [Number, String, Number, String],
+        "class": [Number, String, Number, String, Number],
+        "student": [String, String, String, Number, String, String, Number],
+        "course": [Number, String, String, String, String, Number, Number],
+        "score": [String, Number, Number],
     };
 
     const assertion = window.common.assertLoggedIn();
@@ -54,13 +39,20 @@
             if (dataTables[panel.id]) {
                 return;
             }
-            const pkLength = tableInfo[panel.id].pkLength;
             const table = panel.querySelector('table');
+            const pkLength = parseInt(table.getAttribute('data-pk-length'));
+            const excluded = [];
+            const ths = table.querySelectorAll('thead th');
+            for (let i = 0; i < ths.length; i++) {
+                if (ths[i].hasAttribute('data-dont-edit')) {
+                    excluded.push(i);
+                }
+            }
             const dataTable = new DataTable(table);
             const editor = makeEditable(dataTable, {
                 contextMenu: true,
                 hiddenColumns: true,
-                excludeColumns: Array.from({ length: pkLength }, (_, i) => i),
+                excludeColumns: excluded,
                 inline: true,
                 menuItems: [
                     {
@@ -93,7 +85,7 @@
                                         alert("Cannot remove a row that is being edited!");
                                         return;
                                     }
-                                    const dataType = tableInfo[panel.id].dataTypes[i];
+                                    const dataType = tableDataTypeInfo[panel.id][i];
                                     const cellValue = dataType(cell.textContent);
                                     pkValues.push(cellValue);
                                 }
@@ -124,11 +116,11 @@
                     const pkValues = [];
                     for (let i = 0; i < pkLength; i++) {
                         const cell = row[i];
-                        const dataType = tableInfo[panel.id].dataTypes[i];
+                        const dataType = tableDataTypeInfo[panel.id][i];
                         const cellValue = dataType(cell.data[0].data);
                         pkValues.push(cellValue);
                     }
-                    const newValueDataType = tableInfo[panel.id].dataTypes[colIdx];
+                    const newValueDataType = tableDataTypeInfo[panel.id][colIdx];
                     const newValue = newValueDataType(after);
                     log(`Cell (${rowIdx}, ${colIdx}) changed from "${before}" to "${after}"`, pkValues, colIdx, newValue);
                     panel.toggleAttribute('data-busy', true);

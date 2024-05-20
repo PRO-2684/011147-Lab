@@ -4,8 +4,8 @@ from json import load
 from secrets import token_urlsafe
 
 TABLES = {
-    "major": ["major_id", "major_name", "dean"],
-    "class": ["class_id", "class_name", "advisor", "major_id"],
+    "major": ["major_id", "major_name", "major_stu_num", "dean"],
+    "class": ["class_id", "class_name", "class_stu_num", "advisor", "major_id"],
     "student": [
         "stu_id",
         "stu_password",
@@ -42,6 +42,9 @@ def log(token: str, *args, **kwargs):
     else:
         badge = token
     print(f"[{badge}]", *args, **kwargs)
+
+
+# Database operations
 
 
 def initConnection(port: int = 3306) -> "Connection[Cursor]":
@@ -122,10 +125,15 @@ def insertTable(conn: "Connection[Cursor]", table: str, **kwargs) -> tuple[bool,
     if table not in TABLES:
         return False
     with conn.cursor() as cur:
-        values = [kwargs.get(col, None) for col in TABLES[table]]
+        columns = []
+        values = []
+        for col in TABLES[table]:
+            if col in kwargs:
+                columns.append(col)
+                values.append(kwargs[col])
         try:
             r = cur.execute(
-                f"INSERT INTO {table} VALUES ({', '.join(['%s' for _ in range(len(values))])})",
+                f"INSERT INTO {table} ({', '.join(columns)}) VALUES ({', '.join(['%s' for _ in range(len(values))])})",
                 values,
             )
         except Exception as e:

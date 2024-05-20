@@ -20,16 +20,18 @@
     <div id="nav"></div>
     <div id="panels">
         <div id="major" data-active>
-            <table>
+            <table data-pk-length="1">
                 <thead>
                     <tr>
-                        <th>Major ID</th>
+                        <th data-dont-edit>Major ID</th>
                         <th>Major Name</th>
+                        <th data-dont-edit>Major Student Count</th>
                         <th>Dean</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
+                        <td>null</td>
                         <td>null</td>
                         <td>null</td>
                         <td>null</td>
@@ -41,22 +43,25 @@
                 <input type="hidden" name="table" value="major">
                 <input type="number" min="1" name="major_id" placeholder="Major ID" required>
                 <input type="text" name="major_name" placeholder="Major Name" required>
+                <input type="text" name="ignore_me" value="" style="display: none;">
                 <input type="text" name="dean" placeholder="Dean" required>
                 <button type="submit">Insert</button>
             </form>
         </div>
         <div id="class">
-            <table>
+            <table data-pk-length="1">
                 <thead>
                     <tr>
-                        <th>Class ID</th>
+                        <th data-dont-edit>Class ID</th>
                         <th>Class Name</th>
+                        <th data-dont-edit>Class Student Count</th>
                         <th>Advisor</th>
                         <th>Major ID</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
+                        <td>null</td>
                         <td>null</td>
                         <td>null</td>
                         <td>null</td>
@@ -69,16 +74,17 @@
                 <input type="hidden" name="table" value="class">
                 <input type="number" min="1" name="class_id" placeholder="Class ID" required>
                 <input type="text" name="class_name" placeholder="Class Name" required>
+                <input type="text" name="ignore_me" value="" style="display: none;">
                 <input type="text" name="advisor" placeholder="Advisor" required>
                 <input type="number" min="1" name="major_id" placeholder="Major ID" required>
                 <button type="submit">Insert</button>
             </form>
         </div>
         <div id="student">
-            <table>
+            <table data-pk-length="1">
                 <thead>
                     <tr>
-                        <th>Stu ID</th>
+                        <th data-dont-edit>Stu ID</th>
                         <th>Password</th>
                         <th>Stu Name</th>
                         <th>Sex</th>
@@ -113,10 +119,10 @@
             </form>
         </div>
         <div id="course">
-            <table>
+            <table data-pk-length="1">
                 <thead>
                     <tr>
-                        <th>Course ID</th>
+                        <th data-dont-edit>Course ID</th>
                         <th>Course Name</th>
                         <th>Course Desc</th>
                         <th>Semester</th>
@@ -151,11 +157,11 @@
             </form>
         </div>
         <div id="score">
-            <table>
+            <table data-pk-length="2">
                 <thead>
                     <tr>
-                        <th>Stu ID</th>
-                        <th>Course ID</th>
+                        <th data-dont-edit>Stu ID</th>
+                        <th data-dont-edit>Course ID</th>
                         <th>Score</th>
                     </tr>
                 </thead>
