@@ -8,6 +8,7 @@ from utils import (
     updateTable,
     insertTable,
     deleteTable,
+    renamePK,
     fetchCourses,
     getStuInfo,
     updateStuInfo,
@@ -162,6 +163,16 @@ def adminDelete(token):
         log(token, "AdminDelete", table, pkValues)
     return {"success": success, "error": error}
 
+
+@app.route("/api/admin/rename", methods=["POST"])
+@adminOnly
+def adminRename(token): # "Rename" primary key values
+    log(token, "AdminRename", request.json)
+    field = request.json.get("field")
+    oldId = request.json.get("oldId")
+    newId = request.json.get("newId")
+    success, error = renamePK(session, field, oldId, newId)
+    return {"success": success, "error": error, "field": field, "oldId": oldId, "newId": newId}
 
 # Student operations
 

@@ -147,14 +147,16 @@
     padding: 5px 15px;
     text-decoration: none;
     width: 100%;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 
 .datatable-editor-menu a:hover {
+    color: var(--link);
     background-color: var(--code-bg);
 }
 
 .datatable-editor-separator {
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-dim);
     margin: 5px 0;
 }
 

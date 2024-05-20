@@ -27,6 +27,18 @@ TABLES = {
     "score": ["stu_id", "course_id", "score"],
 }
 STUDENT_CAN_CHANGE = ["stu_password", "tel", "email"]
+RENAME_FIELD_TO_TABLE = {
+    "major_id": "major",
+    "class_id": "class",
+    "stu_id": "student",
+    "course_id": "course",
+}
+RENAME_ERRORS = {
+    -1: "Unexpected error",
+    0: "Success",
+    1: "oldId not found",
+    2: "newId already exists",
+}
 # token -> user
 loggedInUsers: dict[str, dict] = {}
 
@@ -158,6 +170,33 @@ def deleteTable(
             return False, str(e)
         conn.commit()
         return bool(r), "" if r else "Failed to delete"
+
+
+def renamePK(conn: "Connection[Cursor]", field: str, oldId: str, newId: str) -> tuple[bool, str]:
+    """Rename the primary key value."""
+    table = RENAME_FIELD_TO_TABLE.get(field, None)
+    state = 0
+    if not table:
+        return False, "Invalid field"
+    with conn.cursor() as cur:
+        # It should work, but PyMySQL does not support OUT parameters
+        # try:
+        #     r = cur.callproc(f"rename_{field}", (oldId, newId, state))
+        # except Exception as e:
+        #     return False, str(e)
+        # conn.commit()
+        # print("renamePK", r, state)
+        # state = r[-1]
+        # return not state, RENAME_ERRORS.get(state, "Unknown error")
+        # Workaround
+        try:
+            cur.execute(f"CALL rename_{field}(%s, %s, @state)", (oldId, newId))
+            cur.execute("SELECT @state")
+            state = cur.fetchone()[0]
+        except Exception as e:
+            return False, str(e)
+        conn.commit()
+        return not state, RENAME_ERRORS.get(state, "Unknown error")
 
 
 # Student operations

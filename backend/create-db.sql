@@ -1,5 +1,6 @@
 -- Create the database used to store our tables
-CREATE DATABASE IF NOT EXISTS `student_management`;
+DROP DATABASE IF EXISTS `student_management`;
+CREATE DATABASE `student_management`;
 USE `student_management`;
 
 -- The `admin` table
@@ -62,12 +63,10 @@ BEGIN
 END;
 //
 CREATE TRIGGER `student_after_delete` AFTER DELETE ON `student`
-FOR EACH ROW
-BEGIN
+FOR EACH ROW BEGIN
   UPDATE `class` SET `class_stu_num` = `class_stu_num` - 1 WHERE `class_id` = OLD.class_id;
   UPDATE `major` SET `major_stu_num` = `major_stu_num` - 1 WHERE `major_id` = (SELECT `major_id` FROM `class` WHERE `class_id` = OLD.class_id);
-END;
-//
+END; //
 DELIMITER ;
 -- Example student
 INSERT INTO `student` (`stu_id`, `stu_password`, `stu_name`, `sex`, `tel`, `email`, `class_id`) VALUES ('PB21114514', 'p@ssw0rd', 'Alice', 0, '12345678901', 'alice@example.com', 1);
@@ -97,3 +96,166 @@ CREATE TABLE `score` (
   CHECK (`score` BETWEEN 0 AND 100)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+-- Stored procedures
+DELIMITER //
+
+-- Stored procedure to rename `major_id`
+-- Example: CALL rename_major_id(1, 2, @state); SELECT @state;
+-- Parameters: `old_id` and `new_id`
+-- Output: `state` to indicate the result
+-- state: 0 for success, 1 for `old_id` not found, 2 for `new_id` already exists, -1 for unexpected errors
+DROP PROCEDURE IF EXISTS `rename_major_id`;
+CREATE PROCEDURE `rename_major_id`(IN old_id INT, IN new_id INT, OUT state INT) BEGIN
+  -- Variables
+  DECLARE s INT DEFAULT 0; -- State
+  DECLARE tmp INT DEFAULT 0; -- Temporary variable to check if `old_id`/`new_id` exists
+
+  -- Error handling
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET s = -1; -- Other errors
+  SET foreign_key_checks = FALSE;
+
+  --  Main transaction: Update `major_id` in `major` and `class`
+  START TRANSACTION;
+  SELECT COUNT(*) INTO tmp FROM `major` WHERE `major_id` = old_id;
+  IF tmp = 0 THEN
+    SET s = 1; -- `old_id` not found
+  ELSE
+    SELECT COUNT(*) INTO tmp FROM `major` WHERE `major_id` = new_id;
+    IF tmp > 0 THEN
+      SET s = 2; -- `new_id` already exists
+    END IF;
+  END IF;
+  IF s = 0 THEN
+    UPDATE `major` SET `major_id` = new_id WHERE `major_id` = old_id;
+    UPDATE `class` SET `major_id` = new_id WHERE `major_id` = old_id;
+    COMMIT;
+  ELSE
+    ROLLBACK;
+  END IF;
+  SET foreign_key_checks = TRUE;
+  SET state = s;
+END; //
+
+-- Stored procedure to rename `class_id`
+-- Example: CALL rename_class_id(1, 2, @state); SELECT @state;
+-- Parameters: `old_id` and `new_id`
+-- Output: `state` to indicate the result
+-- state: 0 for success, 1 for `old_id` not found, 2 for `new_id` already exists, -1 for unexpected errors
+DROP PROCEDURE IF EXISTS `rename_class_id`;
+CREATE PROCEDURE `rename_class_id`(IN old_id INT, IN new_id INT, OUT state INT) BEGIN
+  -- Variables
+  DECLARE s INT DEFAULT 0; -- State
+  DECLARE tmp INT DEFAULT 0; -- Temporary variable to check if `old_id`/`new_id` exists
+
+  -- Error handling
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET s = -1; -- Other errors
+  SET foreign_key_checks = FALSE;
+
+  --  Main transaction: Update `class_id` in `class` and `student`
+  START TRANSACTION;
+  SELECT COUNT(*) INTO tmp FROM `class` WHERE `class_id` = old_id;
+  IF tmp = 0 THEN
+    SET s = 1; -- `old_id` not found
+  ELSE
+    SELECT COUNT(*) INTO tmp FROM `class` WHERE `class_id` = new_id;
+    IF tmp > 0 THEN
+      SET s = 2; -- `new_id` already exists
+    END IF;
+  END IF;
+  IF s = 0 THEN
+    UPDATE `class` SET `class_id` = new_id WHERE `class_id` = old_id;
+    UPDATE `student` SET `class_id` = new_id WHERE `class_id` = old_id;
+    COMMIT;
+  ELSE
+    ROLLBACK;
+  END IF;
+  SET foreign_key_checks = TRUE;
+  SET state = s;
+END; //
+
+-- Stored procedure to rename `stu_id`
+-- Example: CALL rename_stu_id('PB21114514', 'PB21114515', @state); SELECT @state;
+-- Parameters: `old_id` and `new_id`
+-- Output: `state` to indicate the result
+-- state: 0 for success, 1 for `old_id` not found, 2 for `new_id` already exists, -1 for unexpected errors
+DROP PROCEDURE IF EXISTS `rename_stu_id`;
+CREATE PROCEDURE `rename_stu_id`(IN old_id VARCHAR(10), IN new_id VARCHAR(10), OUT state INT) BEGIN
+  -- Variables
+  DECLARE s INT DEFAULT 0; -- State
+  DECLARE tmp INT DEFAULT 0; -- Temporary variable to check if `old_id`/`new_id` exists
+
+  -- Error handling
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET s = -1; -- Other errors
+  SET foreign_key_checks = FALSE;
+
+  --  Main transaction: Update `stu_id` in `student` and `score`
+  START TRANSACTION;
+  SELECT COUNT(*) INTO tmp FROM `student` WHERE `stu_id` = old_id;
+  IF tmp = 0 THEN
+    SET s = 1; -- `old_id` not found
+  ELSE
+    SELECT COUNT(*) INTO tmp FROM `student` WHERE `stu_id` = new_id;
+    IF tmp > 0 THEN
+      SET s = 2; -- `new_id` already exists
+    END IF;
+  END IF;
+  IF s = 0 THEN
+    UPDATE `student` SET `stu_id` = new_id WHERE `stu_id` = old_id;
+    UPDATE `score` SET `stu_id` = new_id WHERE `stu_id` = old_id;
+    COMMIT;
+  ELSE
+    ROLLBACK;
+  END IF;
+  SET foreign_key_checks = TRUE;
+  SET state = s;
+END; //
+
+-- Stored procedure to rename `course_id`
+-- Example: CALL rename_course_id(1, 2, @state); SELECT @state;
+-- Parameters: `old_id` and `new_id`
+-- Output: `state` to indicate the result
+-- state: 0 for success, 1 for `old_id` not found, 2 for `new_id` already exists, -1 for unexpected errors
+DROP PROCEDURE IF EXISTS `rename_course_id`;
+CREATE PROCEDURE `rename_course_id`(IN old_id INT, IN new_id INT, OUT state INT) BEGIN
+  -- Variables
+  DECLARE s INT DEFAULT 0; -- State
+  DECLARE tmp INT DEFAULT 0; -- Temporary variable to check if `old_id`/`new_id` exists
+
+  -- Error handling
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION SET s = -1; -- Other errors
+  SET foreign_key_checks = FALSE;
+
+  --  Main transaction: Update `course_id` in `course` and `score`
+  START TRANSACTION;
+  SELECT COUNT(*) INTO tmp FROM `course` WHERE `course_id` = old_id;
+  IF tmp = 0 THEN
+    SET s = 1; -- `old_id` not found
+  ELSE
+    SELECT COUNT(*) INTO tmp FROM `course` WHERE `course_id` = new_id;
+    IF tmp > 0 THEN
+      SET s = 2; -- `new_id` already exists
+    END IF;
+  END IF;
+  IF s = 0 THEN
+    UPDATE `course` SET `course_id` = new_id WHERE `course_id` = old_id;
+    UPDATE `score` SET `course_id` = new_id WHERE `course_id` = old_id;
+    COMMIT;
+  ELSE
+    ROLLBACK;
+  END IF;
+  SET foreign_key_checks = TRUE;
+  SET state = s;
+END; //
+
+-- Tests
+-- CALL rename_*_id(1, 2, @state); SELECT @state;
+-- > 0 (success)
+-- CALL rename_*_id(1, 2, @state); SELECT @state;
+-- > 1 (`old_id` not found)
+-- CALL rename_*_id(2, 2, @state); SELECT @state;
+-- > 2 (`new_id` already exists)
+-- CALL rename_*_id(2, 1, @state); SELECT @state;
+-- > 0 (success)
+
+DELIMITER ;

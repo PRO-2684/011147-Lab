@@ -61,7 +61,7 @@
                             editor.closeMenu();
                             const tr = editor.event.target.closest("tr");
                             const cells = tr.querySelectorAll("td");
-                            const form = panel.querySelector("form");
+                            const form = panel.querySelector("form[data-action='insert']");
                             // Select inputs that type is not "hidden"
                             const inputs = form.querySelectorAll("input:not([type='hidden'])");
                             for (let i = 0; i < cells.length; i++) {
@@ -70,8 +70,28 @@
                             inputs[0].focus();
                             inputs[0].scrollIntoView();
                         }
-                    },
-                    {
+                    }, {
+                        text: "Rename", // Rename PK (copy current PK to "Rename" form)
+                        action: (editor, _event) => {
+                            editor.closeMenu();
+                            const tr = editor.event.target.closest("tr");
+                            const firstCell = tr.querySelector("td");
+                            const pkValue = firstCell.textContent;
+                            const form = panel.querySelector("form[data-action='rename']");
+                            if (!form) { // Cannot rename
+                                alert("Cannot rename PK on this table!");
+                                return;
+                            }
+                            const oldInput = form.querySelector("input[name='oldId']");
+                            oldInput.value = pkValue;
+                            const newInput = form.querySelector("input[name='newId']");
+                            newInput.value = pkValue;
+                            newInput.focus();
+                            newInput.scrollIntoView();
+                        }
+                    },{
+                        separator: true
+                    }, {
                         text: "Remove", // Remove row
                         action: async (editor, _event) => {
                             editor.closeMenu();
@@ -155,7 +175,26 @@
                 }
                 panel.toggleAttribute('data-busy', false);
             }
-            panel.querySelector('form').addEventListener('submit', onInsert);
+            panel.querySelector('form[data-action="insert"]').addEventListener('submit', onInsert);
+            // Rename form
+            const renameForm = panel.querySelector('form[data-action="rename"]');
+            if (renameForm) {
+                async function onRename(e) {
+                    e.preventDefault();
+                    panel.toggleAttribute('data-busy', true);
+                    const respData = await window.common.submit(e, true);
+                    if (respData.success) {
+                        log(`Renamed PK on field "${respData.field}" from "${respData.oldId}" to "${respData.newId}"!`);
+                        await reloadTable(panel);
+                    } else {
+                        const error = `Failed to rename PK on field "${respData.field}" from "${respData.oldId}" to "${respData.newId}": ${respData.error}`;
+                        log(error);
+                        alert(error);
+                    }
+                    panel.toggleAttribute('data-busy', false);
+                }
+                renameForm.addEventListener('submit', onRename);
+            }
             log(`Table "${panel.id}" initialized!`);
         }
 

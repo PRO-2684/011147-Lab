@@ -55,30 +55,32 @@ erDiagram
     CLASS ||..|{ STUDENT : enrolls
     STUDENT }|..|{ COURSE : "takes (int score)"
     MAJOR {
-        int major_id "*系号"
-        string major_name "系名"
-        string dean "系主任"
+        int major_id "*Major ID"
+        string major_name "Major Name"
+        int major_stu_num "Major Student Count"
+        string dean "Dean"
     }
     CLASS {
-        int class_id "*班级号"
-        string class_name "班级名"
-        string advisor "班主任"
+        int class_id "*Class ID"
+        string class_name "Class Name"
+        int class_stu_num "Class Student Count"
+        string advisor "Advisor"
     }
     STUDENT {
-        string stu_id "*学号"
-        string stu_name "姓名"
-        string tel "电话号码"
-        string email "邮箱"
-        bool sex "性别 (1 为男)"
+        string stu_id "*Student ID"
+        string stu_name "Student Name"
+        string tel "Tel"
+        string email "Email"
+        bool sex "Sex (1 for male)"
     }
     COURSE {
-        string course_id "*课程号"
-        string course_name "课程名"
-        string course_desc "课程描述"
-        string semester "开课学期"
-        string teacher "主讲教师"
-        float credit "学分"
-        int hours "课时"
+        string course_id "*Course ID"
+        string course_name "Course Name"
+        string course_desc "Course Desc"
+        string semester "Semester"
+        string teacher "Teacher"
+        float credit "Credit"
+        int hours "Hours"
     }
 ```
 
@@ -101,7 +103,7 @@ erDiagram
 - [x] Student profile picture
     - [x] View
     - [x] Update
-- [ ] Stored procedure & Transaction: Renaming primary keys on tables
+- [x] Stored procedure & Transaction: Renaming primary keys on tables
 - [x] Trigger: Auto-update student count in class and major tables
 - [ ] Function: Calculate GPA
 
