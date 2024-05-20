@@ -18,6 +18,7 @@ from utils import (
 )
 from functools import wraps
 from os import getcwd
+from os.path import join, exists
 from argparse import ArgumentParser
 
 session = initConnection()
@@ -108,7 +109,8 @@ def studentOnly(func):
         isAdmin = user.get("isAdmin") if user else False
         if isAdmin:
             return abort(403)
-        return func(token)
+        stuId = user.get("username")
+        return func(token, stuId)
 
     return wrapper
 
@@ -166,9 +168,7 @@ def adminDelete(token):
 
 @app.route("/api/student/info", methods=["POST"])
 @studentOnly
-def studentInfo(token):
-    user = loggedInQuery(token)
-    stuId = user.get("username")
+def studentInfo(token, stuId):
     log(token, "StudentInfo", stuId)
     result = getStuInfo(session, stuId)
     return {"success": bool(result), "data": result}
@@ -176,9 +176,7 @@ def studentInfo(token):
 
 @app.route("/api/student/update", methods=["POST"])
 @studentOnly
-def studentUpdate(token):
-    user = loggedInQuery(token)
-    stuId = user.get("username")
+def studentUpdate(token, stuId):
     data = request.json
     log(token, "StudentUpdate", data)
     success = updateStuInfo(session, stuId, **data)
@@ -187,7 +185,7 @@ def studentUpdate(token):
 
 @app.route("/api/student/courses", methods=["POST"])
 @studentOnly
-def studentCourses(token):
+def studentCourses(token, stuId):
     log(token, "StudentCourses")
     result = fetchCourses(session)
     return {"success": bool(result), "data": result}
@@ -195,12 +193,21 @@ def studentCourses(token):
 
 @app.route("/api/student/grades", methods=["POST"])
 @studentOnly
-def studentGrades(token):
+def studentGrades(token, stuId):
     log(token, "StudentGrades")
-    user = loggedInQuery(token)
-    stuId = user.get("username")
     result = getStuGrades(session, stuId)
     return {"success": bool(result), "data": result}
+
+
+@app.route("/api/student/profile", methods=["POST"])
+@studentOnly
+def studentProfile(token, stuId):
+    log(token, "StudentProfile", stuId)
+    relPath = f"profile/{stuId}.jpg"
+    if exists(join(CWD, relPath)):
+        return send_from_directory(CWD, relPath)
+    else:
+        return send_from_directory(CWD, "profile/default.jpg")
 
 
 # Serve files

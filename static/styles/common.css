@@ -28,7 +28,7 @@ body {
     scrollbar-color: rgba(93, 125, 171, 0.9) transparent;
 }
 
-h1 {
+h1, h2 {
     text-align: center;
 }
 
@@ -39,6 +39,14 @@ a {
     &:hover {
         color: var(--link);
     }
+}
+
+form.update {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
 }
 
 ::selection {

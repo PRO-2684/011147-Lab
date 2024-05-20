@@ -13,9 +13,21 @@
     <link rel="icon" type="image/svg+xml" href="./static/images/favicon.svg" sizes="any">
     <title>Student Management System - Student</title>
     <style>
-        #info span[id] {
-            text-decoration: underline;
-            cursor: help;
+        #info>#info-display {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            align-items: center;
+
+            span[id]  {
+                text-decoration: underline;
+                cursor: help;
+            }
+
+            img#profile {
+                max-width: 10em;
+                max-height: 10em;
+            }
         }
     </style>
 </head>
@@ -25,30 +37,33 @@
     <div id="nav"></div>
     <div id="panels">
         <div id="info">
-            <ul>
-                <li><b>Student ID:</b> <span>null</span></li>
-                <li><b>Password:</b> <span id="stu_password">null</span></li>
-                <li><b>Name:</b> <span>null</span></li>
-                <li><b>Sex:</b> <span>null</span></li>
-                <li><b>Tel:</b> <span id="tel">null</span></li>
-                <li><b>Email:</b> <span id="email">null</span></li>
-                <li>
-                    <b>Class ID:</b> <span>null</span>
-                    <ul>
-                        <li><b>Class Name:</b> <span>null</span></li>
-                        <li><b>Advisor:</b> <span>null</span></li>
-                    </ul>
-                </li>
-                <li>
-                    <b>Major ID:</b> <span>null</span>
-                    <ul>
-                        <li><b>Major Name:</b> <span>null</span></li>
-                        <li><b>Dean:</b> <span>null</span></li>
-                    </ul>
-                </li>
-            </ul>
+            <div id="info-display">
+                <ul>
+                    <li><b>Student ID:</b> <span>null</span></li>
+                    <li><b>Password:</b> <span id="stu_password">null</span></li>
+                    <li><b>Name:</b> <span>null</span></li>
+                    <li><b>Sex:</b> <span>null</span></li>
+                    <li><b>Tel:</b> <span id="tel">null</span></li>
+                    <li><b>Email:</b> <span id="email">null</span></li>
+                    <li>
+                        <b>Class ID:</b> <span>null</span>
+                        <ul>
+                            <li><b>Class Name:</b> <span>null</span></li>
+                            <li><b>Advisor:</b> <span>null</span></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <b>Major ID:</b> <span>null</span>
+                        <ul>
+                            <li><b>Major Name:</b> <span>null</span></li>
+                            <li><b>Dean:</b> <span>null</span></li>
+                        </ul>
+                    </li>
+                </ul>
+                <img id="profile">
+            </div>
             <h2>Update Info</h2>
-            <form action="./api/student/update" method="POST">
+            <form action="./api/student/update" method="POST" class="update">
                 <input type="text" name="stu_password" placeholder="Password">
                 <input type="tel" name="tel" placeholder="Tel">
                 <input type="email" name="email" placeholder="Email">

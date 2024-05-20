@@ -96,6 +96,15 @@ erDiagram
 - [x] Retrieve
 - [x] Update
 
+### Other
+
+- [ ] Student profile picture
+    - [x] View
+    - [ ] Update
+- [ ] Stored procedure & Transaction: Renaming primary keys on tables
+- [ ] Trigger: Auto-update student count in class and major tables
+- [ ] Function: Calculate GPA
+
 ## Acknowledgements
 
 - This project's database is managed by [MySQL](https://www.mysql.com/).

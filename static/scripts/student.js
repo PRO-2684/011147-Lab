@@ -28,9 +28,10 @@
 
         async function reloadInfo(panel) {
             initInfo(panel);
+            panel.toggleAttribute("data-busy", true);
+            // Reload text fields
             const ul = panel.querySelector("ul");
             const form = panel.querySelector("form");
-            ul.toggleAttribute("data-busy", true);
             const data = await window.common.postWithToken("/api/student/info");
             if (!data.success) {
                 log("Failed to reload info panel.");
@@ -50,7 +51,21 @@
                     }
                 }
             }
-            ul.toggleAttribute("data-busy", false);
+            // Reload user profile image
+            const img = panel.querySelector("img#profile");
+            const r = await fetch("/api/student/profile", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ token: window.loginInfo.token }),
+            });
+            const imgData = await r.blob();
+            if (img.src) {
+                URL.revokeObjectURL(img.src);
+            }
+            img.src = URL.createObjectURL(imgData);
+            panel.toggleAttribute("data-busy", false);
             log("Reloaded info panel.");
         }
 
