@@ -180,6 +180,7 @@ def renamePK(conn: "Connection[Cursor]", field: str, oldId: str, newId: str) -> 
         return False, "Invalid field"
     with conn.cursor() as cur:
         # It should work, but PyMySQL does not support OUT parameters
+        # =====
         # try:
         #     r = cur.callproc(f"rename_{field}", (oldId, newId, state))
         # except Exception as e:
@@ -188,6 +189,7 @@ def renamePK(conn: "Connection[Cursor]", field: str, oldId: str, newId: str) -> 
         # print("renamePK", r, state)
         # state = r[-1]
         # return not state, RENAME_ERRORS.get(state, "Unknown error")
+        # =====
         # Workaround
         try:
             cur.execute(f"CALL rename_{field}(%s, %s, @state)", (oldId, newId))
@@ -241,7 +243,7 @@ def updateStuInfo(conn: "Connection[Cursor]", stu_id: str, **kwargs) -> bool:
         return bool(r)
 
 
-def getStuGrades(conn: "Connection[Cursor]", stu_id: str) -> tuple[tuple]:
+def getStuScores(conn: "Connection[Cursor]", stu_id: str) -> tuple[tuple]:
     """Get the student's grades."""
     with conn.cursor() as cur:
         cur.execute(
@@ -249,6 +251,16 @@ def getStuGrades(conn: "Connection[Cursor]", stu_id: str) -> tuple[tuple]:
             (stu_id,),
         )
         return cur.fetchall()
+
+
+def getStuAvgScore(conn: "Connection[Cursor]", stu_id: str) -> float | None:
+    """Get the student's average score."""
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT calculate_avg_score(%s)",
+            (stu_id,),
+        )
+        return cur.fetchone()[0]
 
 
 # Login & Logout

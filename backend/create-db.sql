@@ -97,7 +97,7 @@ CREATE TABLE `score` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
--- Stored procedures
+-- Stored procedure(s) & function(s)
 DELIMITER //
 
 -- Stored procedure to rename `major_id`
@@ -257,5 +257,15 @@ END; //
 -- > 2 (`new_id` already exists)
 -- CALL rename_*_id(2, 1, @state); SELECT @state;
 -- > 0 (success)
+
+-- Function to calculate the average score of a student
+-- Example: SELECT calculate_avg_score('PB21114514');
+DROP FUNCTION IF EXISTS `calculate_avg_score`;
+CREATE FUNCTION `calculate_avg_score`(stu_id VARCHAR(10)) RETURNS FLOAT DETERMINISTIC BEGIN
+  DECLARE avg_score FLOAT;
+  SELECT AVG(`score`) INTO avg_score FROM `score` WHERE `stu_id` = stu_id;
+  RETURN avg_score;
+END; //
+
 
 DELIMITER ;

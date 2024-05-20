@@ -12,7 +12,8 @@ from utils import (
     fetchCourses,
     getStuInfo,
     updateStuInfo,
-    getStuGrades,
+    getStuScores,
+    getStuAvgScore,
     loginUser,
     logoutUser,
     loggedInQuery,
@@ -202,12 +203,20 @@ def studentCourses(token, stuId):
     return {"success": bool(result), "data": result}
 
 
-@app.route("/api/student/grades", methods=["POST"])
+@app.route("/api/student/scores", methods=["POST"])
 @studentOnly
-def studentGrades(token, stuId):
-    log(token, "StudentGrades")
-    result = getStuGrades(session, stuId)
+def studentScores(token, stuId):
+    log(token, "StudentScores")
+    result = getStuScores(session, stuId)
     return {"success": bool(result), "data": result}
+
+
+@app.route("/api/student/avg_score", methods=["POST"])
+@studentOnly
+def studentAvgScore(token, stuId):
+    log(token, "StudentAvgScore")
+    result = getStuAvgScore(session, stuId)
+    return {"success": True, "data": result}
 
 
 @app.route("/api/student/profile", methods=["POST"])

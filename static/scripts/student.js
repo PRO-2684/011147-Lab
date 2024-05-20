@@ -4,6 +4,10 @@
     const log = console.log.bind(console, "[student.js]");
     const { DataTable } = window.simpleDatatables;
 
+    function scoreToGPA(score) {
+        return 4.3; // TODO: Implement this
+    }
+
     const assertion = window.common.assertLoggedIn();
     window.addEventListener("DOMContentLoaded", async (event) => {
         if (!(await assertion)) return;
@@ -12,7 +16,7 @@
         const mapping = {
             "info": reloadInfo,
             "courses": reloadTable,
-            "grades": reloadTable,
+            "scores": reloadScores,
         };
         const dataTables = {};
         window.common.initNav(panels, nav);
@@ -157,6 +161,21 @@
             const dataTable = new DataTable(table);
             dataTables[panel.id] = dataTable;
             log(`Table "${panel.id}" initialized!`);
+        }
+
+        async function reloadScores(panel) {
+            await reloadTable(panel);
+            const avgScoreSpan = panel.querySelector("span#avg-score");
+            const gpaSpan = panel.querySelector("span#gpa");
+            const data = await window.common.postWithToken("/api/student/avg_score");
+            const avgScore = data.data;
+            if (avgScore === null) {
+                avgScoreSpan.textContent = "N/A";
+                gpaSpan.textContent = "N/A";
+                return;
+            }
+            avgScoreSpan.textContent = avgScore;
+            gpaSpan.textContent = scoreToGPA(avgScore).toFixed(2);
         }
 
         // Float buttons

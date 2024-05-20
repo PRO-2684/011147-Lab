@@ -105,7 +105,7 @@ erDiagram
     - [x] Update
 - [x] Stored procedure & Transaction: Renaming primary keys on tables
 - [x] Trigger: Auto-update student count in class and major tables
-- [ ] Function: Calculate GPA
+- [x] Function: Calculate GPA
 
 ## Acknowledgements
 
