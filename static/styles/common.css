@@ -41,6 +41,10 @@ a {
     }
 }
 
+ul {
+    padding-inline-start: 1em;
+}
+
 form.update {
     display: flex;
     flex-wrap: wrap;
