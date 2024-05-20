@@ -90,6 +90,32 @@
             }
             form.addEventListener("submit", onUpdate);
             form.toggleAttribute("data-initialized", true);
+            const input = panel.querySelector("input#profile-upload");
+            input.addEventListener("change", async (e) => {
+                const file = e.target.files[0];
+                if (!file) {
+                    return;
+                }
+                const formData = new FormData();
+                formData.append("token", window.loginInfo.token);
+                formData.append("file", file);
+                panel.toggleAttribute("data-busy", true);
+                const r = await fetch("/api/student/upload", {
+                    method: "POST",
+                    body: formData,
+                });
+                const respData = await r.json();
+                if (respData.success) {
+                    log("Profile image uploaded!");
+                    input.value = "";
+                    await reloadInfo(panel);
+                } else {
+                    const error = "Failed to upload profile image: " + respData.error;
+                    log(error);
+                    alert(error);
+                }
+                panel.toggleAttribute("data-busy", false);
+            });
             log("Info panel initialized!");
         }
 

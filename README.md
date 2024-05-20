@@ -98,9 +98,9 @@ erDiagram
 
 ### Other
 
-- [ ] Student profile picture
+- [x] Student profile picture
     - [x] View
-    - [ ] Update
+    - [x] Update
 - [ ] Stored procedure & Transaction: Renaming primary keys on tables
 - [ ] Trigger: Auto-update student count in class and major tables
 - [ ] Function: Calculate GPA

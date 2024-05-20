@@ -210,6 +210,27 @@ def studentProfile(token, stuId):
         return send_from_directory(CWD, "profile/default.jpg")
 
 
+@app.route("/api/student/upload", methods=["POST"])
+def studentUpload():
+    # This is a special case where we don't use the `@studentOnly` decorator
+    # because we're using `multipart/form-data` instead of JSON
+    token = request.form.get("token")
+    user = loggedInQuery(token)
+    if not user:
+        return {"success": False, "error": "Not logged in"}
+    isAdmin = user.get("isAdmin")
+    if isAdmin:
+        return {"success": False, "error": "Admins cannot upload profile pictures on behalf of students"}
+    stuId = user.get("username")
+    log(token, "StudentUpload", stuId)
+    file = request.files.get("file")
+    if not file:
+        return {"success": False, "error": "No file uploaded"}
+    relPath = f"profile/{stuId}.jpg"
+    file.save(join(CWD, relPath))
+    return {"success": True, "message": ""}
+
+
 # Serve files
 
 

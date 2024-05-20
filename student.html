@@ -24,10 +24,18 @@
                 cursor: help;
             }
 
-            img#profile {
-                max-width: 10em;
-                max-height: 10em;
+            #profile-display {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1em;
+
+                img#profile {
+                    max-width: 10em;
+                    max-height: 10em;
+                }
             }
+
         }
     </style>
 </head>
@@ -60,7 +68,10 @@
                         </ul>
                     </li>
                 </ul>
-                <img id="profile">
+                <div id="profile-display">
+                    <img id="profile" title="Profile Picture">
+                    <input id="profile-upload" type="file" accept=".jpg" title="Drag and drop or click to upload a new profile picture">
+                </div>
             </div>
             <h2>Update Info</h2>
             <form action="./api/student/update" method="POST" class="update">
