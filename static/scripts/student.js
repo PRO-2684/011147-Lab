@@ -43,11 +43,6 @@
                     if (span.hasAttribute("id")) {
                         const input = form.querySelector(`input[name="${span.id}"]`);
                         input.value = data.data[i];
-                        span.title = "Double click to edit";
-                        span.addEventListener("dblclick", () => {
-                            input.scrollIntoView();
-                            input.focus();
-                        });
                     }
                 }
             }
@@ -70,7 +65,16 @@
         }
 
         function initInfo(panel) {
+            const spans = panel.querySelectorAll("ul span[id]");
             const form = panel.querySelector("form");
+            for (const span of spans) {
+                const input = form.querySelector(`input[name="${span.id}"]`);
+                span.title = "Double click to edit";
+                span.addEventListener("dblclick", () => {
+                    input.scrollIntoView();
+                    input.focus();
+                });
+            }
             if (form.hasAttribute("data-initialized")) {
                 return;
             }

@@ -106,6 +106,16 @@
 
     function initNav(panels, nav) {
         function showPanel(panelId) {
+            if (document.startViewTransition) {
+                document.startViewTransition(() => {
+                    _showPanel(panelId);
+                });
+            } else {
+                _showPanel(panelId);
+            }
+        }
+
+        function _showPanel(panelId) {
             for (const panel of panels) {
                 panel.toggleAttribute('data-active', panel.id === panelId);
             }

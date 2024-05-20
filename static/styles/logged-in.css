@@ -81,10 +81,11 @@ h1 {
         height: 2em;
         font-size: 1.5em;
         font-weight: bold;
-        transition: opacity 0.2s ease-in-out;
+        transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
 
         &:hover {
             opacity: 1;
+            transform: scale(1.1);
         }
     }
 }
@@ -92,4 +93,8 @@ h1 {
 [data-busy] {
     opacity: 0.6;
     cursor: progress;
+
+    * {
+        pointer-events: none;
+    }
 }
