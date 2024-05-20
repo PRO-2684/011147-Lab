@@ -16,7 +16,7 @@
         },
     });
 
-    async function submit(e, withToken=false) {
+    async function submit(e, withToken = false) {
         // Transform form data to JSON and send it to the server
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -59,7 +59,7 @@
         return loggedIn;
     }
 
-    async function postWithToken(url, data={}) {
+    async function postWithToken(url, data = {}) {
         const token = window.loginInfo?.token;
         if (!token) {
             log("Not logged in!");

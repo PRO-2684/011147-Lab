@@ -36,8 +36,8 @@ Lab2 of course 011147.02 at USTC. (数据库系统及应用, An Introduction to 
 
 ### Dummy Data
 
-- `major`: `(1, 'Computer Science', 'John Doe')`
-- `class`: `(1, 'CS101', 'Jane Doe')`
+- `major`: `(1, 'Computer Science', 0, 'John Doe')`
+- `class`: `(1, 'CS101', 0, 'Jane Doe')`
 - `student`: `('PB21114514', 'p@ssw0rd', 'Alice', 0, '12345678901', 'alice@example.com', 1)`
 
 ### Debugging
@@ -102,7 +102,7 @@ erDiagram
     - [x] View
     - [x] Update
 - [ ] Stored procedure & Transaction: Renaming primary keys on tables
-- [ ] Trigger: Auto-update student count in class and major tables
+- [x] Trigger: Auto-update student count in class and major tables
 - [ ] Function: Calculate GPA
 
 ## Acknowledgements

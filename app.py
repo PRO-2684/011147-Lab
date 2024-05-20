@@ -220,7 +220,10 @@ def studentUpload():
         return {"success": False, "error": "Not logged in"}
     isAdmin = user.get("isAdmin")
     if isAdmin:
-        return {"success": False, "error": "Admins cannot upload profile pictures on behalf of students"}
+        return {
+            "success": False,
+            "error": "Admins cannot upload profile pictures on behalf of students",
+        }
     stuId = user.get("username")
     log(token, "StudentUpload", stuId)
     file = request.files.get("file")

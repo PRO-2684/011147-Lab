@@ -168,11 +168,16 @@ def fetchCourses(conn: "Connection[Cursor]") -> tuple[tuple]:
     return fetchTable(conn, "course")
 
 
-studentFields = [f"student.{col}" for col in TABLES["student"][:-1]] # Remove duplicate `class_id`
-classFields = [f"class.{col}" for col in TABLES["class"][:-1]] # Remove duplicate `major_id`
+studentFields = [
+    f"student.{col}" for col in TABLES["student"][:-1]
+]  # Remove duplicate `class_id`
+classFields = [
+    f"class.{col}" for col in TABLES["class"][:-1]
+]  # Remove duplicate `major_id`
 majorFields = [f"major.{col}" for col in TABLES["major"]]
 cols = ", ".join(studentFields + classFields + majorFields)
 sql = f"SELECT {cols} FROM student, class, major WHERE student.class_id = class.class_id AND class.major_id = major.major_id AND student.stu_id = %s"
+
 
 def getStuInfo(conn: "Connection[Cursor]", stu_id: str) -> tuple | None:
     """Get the student's information, including the class and major."""
