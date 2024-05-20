@@ -11,8 +11,6 @@ CREATE TABLE `admin` (
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`admin_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
--- Default admin account
-INSERT INTO `admin` (`admin_id`, `username`, `password`) VALUES (1, 'admin', 'admin'); 
 
 -- The `major` table
 DROP TABLE IF EXISTS `major`;
@@ -23,8 +21,6 @@ CREATE TABLE `major` (
   `dean` varchar(255) NOT NULL,
   PRIMARY KEY (`major_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
--- Example major
-INSERT INTO `major` (`major_id`, `major_name`, `dean`) VALUES (1, 'Computer Science', 'John Doe');
 
 -- The `class` table
 DROP TABLE IF EXISTS `class`;
@@ -37,8 +33,6 @@ CREATE TABLE `class` (
   PRIMARY KEY (`class_id`),
   CONSTRAINT `class_ibfk_1` FOREIGN KEY (`major_id`) REFERENCES `major` (`major_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
--- Example class
-INSERT INTO `class` (`class_id`, `class_name`, `advisor`, `major_id`) VALUES (1, 'CS101', 'Jane Doe', 1);
 
 -- The `student` table
 DROP TABLE IF EXISTS `student`;
@@ -68,8 +62,6 @@ FOR EACH ROW BEGIN
   UPDATE `major` SET `major_stu_num` = `major_stu_num` - 1 WHERE `major_id` = (SELECT `major_id` FROM `class` WHERE `class_id` = OLD.class_id);
 END; //
 DELIMITER ;
--- Example student
-INSERT INTO `student` (`stu_id`, `stu_password`, `stu_name`, `sex`, `tel`, `email`, `class_id`) VALUES ('PB21114514', 'p@ssw0rd', 'Alice', 0, '12345678901', 'alice@example.com', 1);
 
 -- The `course` table
 DROP TABLE IF EXISTS `course`;
@@ -267,5 +259,25 @@ CREATE FUNCTION `calculate_avg_score`(stu_id VARCHAR(10)) RETURNS FLOAT DETERMIN
   RETURN avg_score;
 END; //
 
-
 DELIMITER ;
+
+-- Default admin account
+INSERT INTO `admin` (`admin_id`, `username`, `password`) VALUES (1, 'admin', 'admin'); 
+-- Sample data
+INSERT INTO `major` (`major_id`, `major_name`, `dean`) VALUES (1, 'Computer Science', 'Dr. Smith');
+INSERT INTO `major` (`major_id`, `major_name`, `dean`) VALUES (2, 'Software Engineering', 'Dr. Johnson');
+INSERT INTO `class` (`class_id`, `class_name`, `advisor`, `major_id`) VALUES (1, 'CS101', 'Dr. Smith', 1);
+INSERT INTO `class` (`class_id`, `class_name`, `advisor`, `major_id`) VALUES (2, 'SE101', 'Dr. Johnson', 2);
+INSERT INTO `course` (`course_id`, `course_name`, `course_desc`, `semester`, `teacher`, `credit`, `hours`) VALUES (1, 'Math', 'Mathematics', '2021 Spring', 'Dr. White', 3, 48);
+INSERT INTO `course` (`course_id`, `course_name`, `course_desc`, `semester`, `teacher`, `credit`, `hours`) VALUES (2, 'Physics', 'Physics', '2021 Spring', 'Dr. Black', 2, 40);
+INSERT INTO `course` (`course_id`, `course_name`, `course_desc`, `semester`, `teacher`, `credit`, `hours`) VALUES (3, 'CSAPP', 'Computer Systems: A Programmer''s Perspective', '2021 Fall', 'Dr. Smith', 3, 48);
+INSERT INTO `course` (`course_id`, `course_name`, `course_desc`, `semester`, `teacher`, `credit`, `hours`) VALUES (4, 'SEAPP', 'Software Engineering: A Programmer''s Perspective', '2021 Fall', 'Dr. Johnson', 3, 48);
+INSERT INTO `student` (`stu_id`, `stu_password`, `stu_name`, `sex`, `tel`, `email`, `class_id`) VALUES ('PB21114514', 'alicep@ssw0rd', 'Alice', 0, '1234567890', 'alice@example.com', 1);
+INSERT INTO `student` (`stu_id`, `stu_password`, `stu_name`, `sex`, `tel`, `email`, `class_id`) VALUES ('PB21114515', 'bobp@ssw0rd', 'Bob', 1, '1234567890', 'bob@example.com', 1);
+INSERT INTO `student` (`stu_id`, `stu_password`, `stu_name`, `sex`, `tel`, `email`, `class_id`) VALUES ('PB21114516', 'charliep@ssw0rd', 'Charlie', 1, '1234567890', 'charlie@example.com', 2);
+INSERT INTO `score` (`stu_id`, `course_id`, `score`) VALUES ('PB21114514', 1, 90);
+INSERT INTO `score` (`stu_id`, `course_id`, `score`) VALUES ('PB21114514', 2, 85);
+INSERT INTO `score` (`stu_id`, `course_id`, `score`) VALUES ('PB21114515', 1, 95);
+INSERT INTO `score` (`stu_id`, `course_id`, `score`) VALUES ('PB21114515', 2, 80);
+INSERT INTO `score` (`stu_id`, `course_id`, `score`) VALUES ('PB21114516', 3, 88);
+INSERT INTO `score` (`stu_id`, `course_id`, `score`) VALUES ('PB21114516', 4, 92);
