@@ -89,7 +89,7 @@
                             newInput.focus();
                             newInput.scrollIntoView();
                         }
-                    },{
+                    }, {
                         separator: true
                     }, {
                         text: "Remove", // Remove row

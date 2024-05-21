@@ -172,7 +172,9 @@ def deleteTable(
         return bool(r), "" if r else "Failed to delete"
 
 
-def renamePK(conn: "Connection[Cursor]", field: str, oldId: str, newId: str) -> tuple[bool, str]:
+def renamePK(
+    conn: "Connection[Cursor]", field: str, oldId: str, newId: str
+) -> tuple[bool, str]:
     """Rename the primary key value."""
     table = RENAME_FIELD_TO_TABLE.get(field, None)
     state = 0
