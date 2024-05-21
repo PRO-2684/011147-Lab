@@ -259,13 +259,12 @@ END; //
 -- CALL rename_*_id(2, 1, @state); SELECT @state;
 -- > 0 (success)
 
--- Function to calculate the average score of a student
+-- Function to calculate the weighted average score of a student
 -- Example: SELECT calculate_avg_score('PB21114514');
 DROP FUNCTION IF EXISTS `calculate_avg_score`;
-CREATE FUNCTION `calculate_avg_score`(stu_id VARCHAR(10)) RETURNS FLOAT DETERMINISTIC BEGIN
-  DECLARE avg_score FLOAT;
-  SELECT AVG(`score`) INTO avg_score FROM `score` WHERE `stu_id` = stu_id;
-  RETURN avg_score;
+CREATE FUNCTION `calculate_avg_score`(in_stu_id VARCHAR(10)) RETURNS FLOAT DETERMINISTIC BEGIN
+  -- sum(credit * score) / sum(credit)
+  RETURN (SELECT SUM(`credit` * `score`) / SUM(`credit`) FROM `course`, `score` WHERE `course`.`course_id` = `score`.`course_id` AND `stu_id` = in_stu_id);
 END; //
 
 DELIMITER ;

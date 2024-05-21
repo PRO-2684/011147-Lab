@@ -19,10 +19,6 @@
             justify-content: space-evenly;
             align-items: center;
 
-            b::after {
-                content: ": ";
-            }
-
             span[id]  {
                 text-decoration: underline;
                 cursor: help;
@@ -64,7 +60,7 @@
             }
         }
 
-        #scores>ul {
+        #scores>div#statistics {
             font-size: larger;
             width: fit-content;
             margin: auto;
@@ -79,26 +75,26 @@
         <div id="info">
             <div id="info-display">
                 <ul>
-                    <li><b>Student ID</b> <span>null</span></li>
-                    <li><b>Password</b> <span id="stu_password">null</span></li>
-                    <li><b>Name</b> <span>null</span></li>
-                    <li><b>Sex</b> <span>null</span></li>
-                    <li><b>Tel</b> <span id="tel">null</span></li>
-                    <li><b>Email</b> <span id="email">null</span></li>
+                    <li><b>Student ID</b>: <span>null</span></li>
+                    <li><b>Password</b>: <span id="stu_password">null</span></li>
+                    <li><b>Name</b>: <span>null</span></li>
+                    <li><b>Sex</b>: <span>null</span></li>
+                    <li><b>Tel</b>: <span id="tel">null</span></li>
+                    <li><b>Email</b>: <span id="email">null</span></li>
                     <li>
-                        <b>Class ID</b> <span>null</span>
+                        <b>Class ID</b>: <span>null</span>
                         <ul>
-                            <li><b>Class Name</b> <span>null</span></li>
-                            <li><b>Class Student Count</b> <span>null</span></li>
-                            <li><b>Advisor</b> <span>null</span></li>
+                            <li><b>Class Name</b>: <span>null</span></li>
+                            <li><b>Class Student Count</b>: <span>null</span></li>
+                            <li><b>Advisor</b>: <span>null</span></li>
                         </ul>
                     </li>
                     <li>
-                        <b>Major ID</b> <span>null</span>
+                        <b>Major ID</b>: <span>null</span>
                         <ul>
-                            <li><b>Major Name</b> <span>null</span></li>
-                            <li><b>Major Student Count</b> <span>null</span></li>
-                            <li><b>Dean</b> <span>null</span></li>
+                            <li><b>Major Name</b>: <span>null</span></li>
+                            <li><b>Major Student Count</b>: <span>null</span></li>
+                            <li><b>Dean</b>: <span>null</span></li>
                         </ul>
                     </li>
                 </ul>
@@ -159,10 +155,9 @@
                 </tbody>
             </table>
             <h2>Statistics</h2>
-            <ul>
-                <li><b>Average Score</b> <span id="avg-score">null</span></li>
-                <li><b>GPA</b> <span id="gpa">null</span></li>
-            </ul>
+            <div id="statistics">
+                <b>Weighted Average Score</b>: <span id="avg-score">null</span>
+            </div>
         </div>
     </div>
     <div id="float-buttons">

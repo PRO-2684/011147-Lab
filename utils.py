@@ -260,7 +260,9 @@ def getStuAvgScore(conn: "Connection[Cursor]", stu_id: str) -> float | None:
             "SELECT calculate_avg_score(%s)",
             (stu_id,),
         )
-        return cur.fetchone()[0]
+        result = cur.fetchone()[0]
+        print(result)
+        return result
 
 
 # Login & Logout
