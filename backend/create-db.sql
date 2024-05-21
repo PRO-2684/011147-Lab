@@ -47,11 +47,10 @@ CREATE TABLE `student` (
   PRIMARY KEY (`stu_id`),
   CONSTRAINT `student_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
--- Trigger to update `major_stu_num` and `class_stu_num` when a student is added or removed
 DELIMITER //
+-- Trigger to update `major_stu_num` and `class_stu_num` when a student is added or removed
 CREATE TRIGGER `student_after_insert` AFTER INSERT ON `student`
-FOR EACH ROW
-BEGIN
+FOR EACH ROW BEGIN
   UPDATE `class` SET `class_stu_num` = `class_stu_num` + 1 WHERE `class_id` = NEW.class_id;
   UPDATE `major` SET `major_stu_num` = `major_stu_num` + 1 WHERE `major_id` = (SELECT `major_id` FROM `class` WHERE `class_id` = NEW.class_id);
 END;
@@ -60,6 +59,16 @@ CREATE TRIGGER `student_after_delete` AFTER DELETE ON `student`
 FOR EACH ROW BEGIN
   UPDATE `class` SET `class_stu_num` = `class_stu_num` - 1 WHERE `class_id` = OLD.class_id;
   UPDATE `major` SET `major_stu_num` = `major_stu_num` - 1 WHERE `major_id` = (SELECT `major_id` FROM `class` WHERE `class_id` = OLD.class_id);
+END; //
+-- Trigger to update `major_stu_num` and `class_stu_num` when a student's class_id is updated
+CREATE TRIGGER `student_after_update` AFTER UPDATE ON `student`
+FOR EACH ROW BEGIN
+  IF OLD.class_id <> NEW.class_id THEN
+    UPDATE `class` SET `class_stu_num` = `class_stu_num` - 1 WHERE `class_id` = OLD.class_id;
+    UPDATE `major` SET `major_stu_num` = `major_stu_num` - 1 WHERE `major_id` = (SELECT `major_id` FROM `class` WHERE `class_id` = OLD.class_id);
+    UPDATE `class` SET `class_stu_num` = `class_stu_num` + 1 WHERE `class_id` = NEW.class_id;
+    UPDATE `major` SET `major_stu_num` = `major_stu_num` + 1 WHERE `major_id` = (SELECT `major_id` FROM `class` WHERE `class_id` = NEW.class_id);
+  END IF;
 END; //
 DELIMITER ;
 
