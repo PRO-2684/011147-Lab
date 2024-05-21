@@ -14,7 +14,7 @@
     const assertion = window.common.assertLoggedIn();
     window.addEventListener('DOMContentLoaded', async (event) => {
         if (!(await assertion)) return;
-        const panels = $("#panels").children;
+        const panels = $("#panels");
         const nav = $('#nav');
         const dataTables = {};
         window.common.initNav(panels, nav);
@@ -202,7 +202,7 @@
         window.common.initFloatButtons(reloadTable);
 
         // Load the tables
-        for (const panel of panels) {
+        for (const panel of panels.children) {
             await reloadTable(panel);
         }
     });

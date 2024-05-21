@@ -45,6 +45,8 @@ h1 {
 #panels {
     display: flex;
     justify-content: center;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
 
     >div {
         width: 100%;

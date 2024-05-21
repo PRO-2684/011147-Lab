@@ -106,26 +106,21 @@
 
     function initNav(panels, nav) {
         function showPanel(panelId) {
-            if (document.startViewTransition) {
-                document.startViewTransition(() => {
-                    _showPanel(panelId);
-                });
-            } else {
-                _showPanel(panelId);
-            }
-        }
-
-        function _showPanel(panelId) {
-            for (const panel of panels) {
-                panel.toggleAttribute('data-active', panel.id === panelId);
-            }
-            for (const anchor of nav.children) {
-                anchor.toggleAttribute('data-active', anchor.getAttribute('data-panel') === panelId);
-            }
+            log("Show panel:", panelId);
+            panels.addEventListener("transitionend", () => {
+                for (const panel of panels.children) {
+                    panel.toggleAttribute('data-active', panel.id === panelId);
+                }
+                for (const anchor of nav.children) {
+                    anchor.toggleAttribute('data-active', anchor.getAttribute('data-panel') === panelId);
+                }
+                panels.style.opacity = 1;
+            }, { once: true });
+            panels.style.opacity = 0;
         }
 
         // Generate anchors
-        for (const panel of panels) {
+        for (const panel of panels.children) {
             const anchor = document.createElement('a');
             anchor.href = '#' + panel.id;
             anchor.setAttribute('data-panel', panel.id);
@@ -141,8 +136,11 @@
         });
 
         // Show the initial panel based on the current URL hash
-        const initialPanelId = location.hash.substring(1) || panels[0].id;
-        showPanel(initialPanelId);
+        if (location.hash) {
+            showPanel(location.hash.substring(1));
+        } else {
+            location.hash = panels.children[0].id;
+        }
     }
 
     function initFloatButtons(reloadFunc) {

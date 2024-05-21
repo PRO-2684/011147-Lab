@@ -7,7 +7,7 @@
     const assertion = window.common.assertLoggedIn();
     window.addEventListener("DOMContentLoaded", async (event) => {
         if (!(await assertion)) return;
-        const panels = $("#panels").children;
+        const panels = $("#panels");
         const nav = $('#nav');
         const mapping = {
             "info": reloadInfo,
@@ -161,6 +161,7 @@
         }
 
         async function reloadScores(panel) {
+            panel.toggleAttribute("data-busy", true);
             await reloadTable(panel);
             const avgScoreSpan = panel.querySelector("span#avg-score");
             const data = await window.common.postWithToken("/api/student/avg_score");
@@ -171,13 +172,14 @@
             }
             avgScoreSpan.textContent = avgScore.toFixed(2);
             avgScoreSpan.title = avgScore;
+            panel.toggleAttribute("data-busy", false);
         }
 
         // Float buttons
         window.common.initFloatButtons(reloadPanel);
 
         // Load the panels
-        for (const panel of panels) {
+        for (const panel of panels.children) {
             await reloadPanel(panel);
         }
     })
