@@ -22,16 +22,16 @@
         location.search.includes("debug=true") && (window.dataTables = dataTables);
 
         async function reloadTable(panel) {
+            panel.toggleAttribute('data-busy', true);
             initTable(panel);
             const dataTable = dataTables[panel.id].dataTable;
             dataTable.setMessage("Loading...");
-            dataTable.wrapperDOM.toggleAttribute('data-busy', true);
             const data = await window.common.postWithToken(`/api/admin/get`, {
                 table: panel.id,
             });
             dataTable.data.data = [];
             dataTable.insert({ data: data.data });
-            dataTable.wrapperDOM.toggleAttribute('data-busy', false);
+            panel.toggleAttribute('data-busy', false);
             log(`Reloaded table "${panel.id}".`);
         }
 

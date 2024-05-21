@@ -22,13 +22,14 @@
         async function reloadPanel(panel) {
             const reloadFunc = mapping[panel.id];
             if (reloadFunc) {
+                panel.toggleAttribute("data-busy", true);
                 await reloadFunc(panel);
+                panel.toggleAttribute("data-busy", false);
             }
         }
 
         async function reloadInfo(panel) {
             initInfo(panel);
-            panel.toggleAttribute("data-busy", true);
             // Reload text fields
             const ul = panel.querySelector("ul");
             const form = panel.querySelector("form");
@@ -60,13 +61,15 @@
                 URL.revokeObjectURL(img.src);
             }
             img.src = URL.createObjectURL(imgData);
-            panel.toggleAttribute("data-busy", false);
             log("Reloaded info panel.");
         }
 
         function initInfo(panel) {
             const spans = panel.querySelectorAll("ul span[id]");
             const form = panel.querySelector("form");
+            if (form.hasAttribute("data-initialized")) {
+                return;
+            }
             for (const span of spans) {
                 const input = form.querySelector(`input[name="${span.id}"]`);
                 span.title = "Double click to edit";
@@ -75,9 +78,6 @@
                     input.scrollIntoView();
                     input.focus();
                 });
-            }
-            if (form.hasAttribute("data-initialized")) {
-                return;
             }
             async function onUpdate(e) {
                 e.preventDefault();
@@ -161,7 +161,6 @@
         }
 
         async function reloadScores(panel) {
-            panel.toggleAttribute("data-busy", true);
             await reloadTable(panel);
             const avgScoreSpan = panel.querySelector("span#avg-score");
             const data = await window.common.postWithToken("/api/student/avg_score");
@@ -172,7 +171,6 @@
             }
             avgScoreSpan.textContent = avgScore.toFixed(2);
             avgScoreSpan.title = avgScore;
-            panel.toggleAttribute("data-busy", false);
         }
 
         // Float buttons
