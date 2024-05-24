@@ -105,6 +105,32 @@ erDiagram
 - [x] Trigger: Auto-update student count in class and major tables
 - [x] Function: Calculate GPA
 
+## 🖼️ Screenshots
+
+### 🔑 Login
+
+![Login page](./pic/login.png)
+
+### 🧑‍💼 Admin
+
+![Admin major](./pic/admin-major.png)
+
+![Admin class](./pic/admin-class.png)
+
+![Admin student](./pic/admin-student.png)
+
+![Admin course](./pic/admin-course.png)
+
+![Admin score](./pic/admin-score.png)
+
+### 👩‍🎓 Student
+
+![Student info](./pic/student-info.png)
+
+![Student courses](./pic/student-courses.png)
+
+![Student scores](./pic/student-scores.png)
+
 ## 🙏 Acknowledgements
 
 - This project's database is managed by [MySQL](https://www.mysql.com/).
