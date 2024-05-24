@@ -1,8 +1,8 @@
-# 011147-Lab
+# 🧪 011147-Lab
 
 Lab2 of course 011147.02 at USTC. (数据库系统及应用, An Introduction to Database System)
 
-## Setup
+## 🛠 Setup
 
 1. Install [Python 3.8+](https://www.python.org/downloads/)
 2. Install [MySQL 8.0+](https://dev.mysql.com/doc/refman/8.0/en/installing.html)
@@ -11,9 +11,9 @@ Lab2 of course 011147.02 at USTC. (数据库系统及应用, An Introduction to 
 5. Modify `config.json` to fit your MySQL username and password (If you intend to change database name, you need to modify `backend/create-db.sql` as well)
 6. Run `./scripts/init-db.sh` to initialize the database
 
-## Usage
+## 🚀 Usage
 
-### Scripts
+### 📜 Scripts
 
 - Initialize database: `./scripts/init-db.sh` (Will auto start MySQL service)
 - Connect to MySQL console: `./scripts/console.sh` (Will auto start MySQL service, need `jq` installed)
@@ -21,31 +21,31 @@ Lab2 of course 011147.02 at USTC. (数据库系统及应用, An Introduction to 
 - Start production server: `./scripts/prod.sh` (Will auto start MySQL service)
 - Stop MySQL service: `./scripts/stop-mysql.sh`
 
-### Admin Account(s)
+### 👨‍💼 Admin Account(s)
 
 - An admin account is created the first time the server is started. The default username is `admin` and the default password is `admin`.
 - Admins can manage students, courses, and grades.
 - Admins can change their own username and password.
 - You can only add/delete admin accounts in the MySQL console.
 
-### Student Account(s)
+### 👩‍🎓 Student Account(s)
 
 - Students can query all courses and their own grades.
 - Students can view their own basic information.
 - Students can change their own password, tel, and email.
 
-### Dummy Data
+### 📊 Dummy Data
 
 See the last few lines of `backend/create-db.sql` for dummy data.
 
-### Debugging
+### 🐞 Debugging
 
 - Debug frontend: append `debug=true` to the URL search parameters
     - `admin.html?debug=true` / `student.html?debug=true`: Will expose all dataTables under `window.dataTables`
 
-## Architecture
+## 🏛 Architecture
 
-### Database
+### 🗃 Database
 
 ```mermaid
 erDiagram
@@ -82,21 +82,21 @@ erDiagram
     }
 ```
 
-## Roadmap
+## 🛤 Roadmap
 
-### Admin
+### 🧑‍💼 Admin
 
 - [x] Create
 - [x] Retrieve
 - [x] Update
 - [x] Delete
 
-### Student
+### 👩‍🎓 Student
 
 - [x] Retrieve
 - [x] Update
 
-### Other
+### 🧩 Other
 
 - [x] Student profile picture
     - [x] View
@@ -105,7 +105,7 @@ erDiagram
 - [x] Trigger: Auto-update student count in class and major tables
 - [x] Function: Calculate GPA
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 - This project's database is managed by [MySQL](https://www.mysql.com/).
 - This project's backend is written in [Python](https://www.python.org/) language, using [Flask](https://flask.palletsprojects.com/) as the web framework and [PyMySQL](https://pymysql.readthedocs.io/en/latest/user/examples.html) to interact with MySQL.
